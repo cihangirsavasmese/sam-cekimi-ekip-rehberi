@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Şam Çekimi Ekip Rehberi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root{
+  /* Düzen: üstte kırmızı kapak, yapışkan sekme çubuğu, tek sütun açılır kartlar */
+  --kirmizi:#c8102e; --kirmizi-koyu:#8f0b20; --kirmizi-y:#c8102e; --lacivert:#14274e; --baslik:#14274e; --altin:#c9982a;
+  --zemin:#f6f3ee; --kart:#ffffff; --kart2:#fbf9f5; --yazi:#1d2330; --soluk:#5d6675; --cizgi:#e2ddd3;
+  --yesil:#1f8a4c; --sari:#b9770e; --mor:#6b3fa0; --mavi:#1e62b5;
+  --vurgu-z:#fffaf0; --kir-z:#fde8ea; --mavi-z:#e6effb; --gri-z:#eceef1; --gri-c:#9aa3b0; --iz:#e7e2d8;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --kirmizi-y:#ff8696; --lacivert:#27437f; --baslik:#a9c2f2;
+  --zemin:#14171d; --kart:#1d2129; --kart2:#262b35; --yazi:#e8eaee; --soluk:#a7b0be; --cizgi:#363c48;
+  --vurgu-z:#2c2716; --kir-z:#3a1d23; --mavi-z:#18273c; --gri-z:#2b303a; --gri-c:#5d6675; --iz:#363c48;
+  color-scheme:dark } }
+:root[data-theme="dark"]{
+  --kirmizi-y:#ff8696; --lacivert:#27437f; --baslik:#a9c2f2;
+  --zemin:#14171d; --kart:#1d2129; --kart2:#262b35; --yazi:#e8eaee; --soluk:#a7b0be; --cizgi:#363c48;
+  --vurgu-z:#2c2716; --kir-z:#3a1d23; --mavi-z:#18273c; --gri-z:#2b303a; --gri-c:#5d6675; --iz:#363c48;
+  color-scheme:dark }
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--kirmizi)}
+:focus-visible{outline:3px solid var(--altin);outline-offset:2px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--zemin);color:var(--yazi);font:16px/1.5 Calibri,"Segoe UI",-apple-system,Helvetica,Arial,sans-serif}
+.ic{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:linear-gradient(135deg,var(--kirmizi),var(--kirmizi-koyu) 60%,var(--lacivert));color:#fff;padding:22px 0 18px}
+.ust{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+h1{font-size:28px;line-height:1.15;margin:4px 0 6px}
+header p{margin:0;opacity:.95;max-width:720px}
+.rozetler{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.rozet{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 10px;font-size:13px}
+/* sekmeler */
+.sekmeler{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--lacivert)}
+.sekmeler .ic{display:flex;gap:2px;overflow-x:auto;padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+.sekmeler button{flex:1 0 auto;background:none;border:0;border-bottom:4px solid transparent;color:#fff;opacity:.75;font:inherit;font-weight:700;padding:12px 12px 9px;cursor:pointer;white-space:nowrap}
+.sekmeler button[aria-selected=true]{opacity:1;border-bottom-color:var(--altin);background:rgba(255,255,255,.08)}
+section.panel{display:none;padding:18px 0 56px}
+section.panel.acik{display:block}
+h2{font-size:21px;color:var(--kirmizi-y);text-wrap:balance;margin:22px 0 8px}
+h2:first-child{margin-top:0}
+p{margin:6px 0}
+.ipucu{color:var(--soluk);font-size:14px;margin:2px 0 10px}
+.kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;padding:14px 16px;margin:10px 0}
+.vurgu{border-left:6px solid var(--altin);background:var(--vurgu-z)}
+.uyari{border-left:6px solid var(--kirmizi);background:var(--kir-z)}
+.bilgi{border-left:6px solid var(--mavi);background:var(--mavi-z)}
+.izgara{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.sayi{font-size:28px;font-weight:700;color:var(--kirmizi-y);line-height:1}
+.sayi small{font-size:14px;color:var(--soluk);font-weight:400}
+/* şerit */
+.serit{display:flex;height:50px;border-radius:10px;overflow:hidden;border:1px solid var(--cizgi);margin:10px 0 4px}
+.serit button{border:0;color:#fff;font:700 12px/1.1 inherit;font-family:inherit;cursor:pointer;min-width:0;overflow:hidden;padding:2px}
+.serit button:hover{filter:brightness(1.15)}
+.r0{background:#6b7686}.r1{background:#b9770e}.r2{background:#6b3fa0}.r3{background:#1e62b5}.r4{background:var(--lacivert)}.r5{background:#1f8a4c}.r6{background:#c8102e}
+/* açılır kutular */
+details{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;margin:8px 0;overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;align-items:center;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"＋";margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-size:18px;flex:none}
+details[open]>summary::after{content:"－"}
+details[open]>summary{border-bottom:1px solid var(--cizgi);background:var(--kart2)}
+summary:hover{background:var(--kart2)}
+.govde{padding:12px 14px}
+.bas{font-weight:700}
+.alt-bilgi{color:var(--soluk);font-size:14px}
+.kod{font-weight:700;color:#fff;background:var(--lacivert);border-radius:6px;padding:2px 8px;font-size:14px;white-space:nowrap;flex:none}
+.kod.y{background:#0f6b63}.kod.e{background:var(--mor)}
+.et{display:inline-block;border-radius:6px;padding:1px 7px;font-size:12px;font-weight:700;white-space:nowrap;flex:none}
+.et-A{background:var(--kirmizi);color:#fff}.et-B{background:var(--sari);color:#fff}.et-C{background:var(--yesil);color:#fff}
+.et-gri{background:var(--gri-z);color:var(--soluk)}
+.renk{width:12px;height:12px;border-radius:3px;flex:none}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+dt{font-weight:700;color:var(--baslik);white-space:nowrap}
+dd{margin:0}
+.ses{border-left:4px solid var(--altin);background:var(--vurgu-z);padding:6px 10px;margin:4px 0;font-style:italic;border-radius:0 8px 8px 0}
+.plan{padding:10px 0;border-top:1px dashed var(--cizgi)}
+.plan:first-child{border-top:0;padding-top:0}
+.plan-bas{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:2px}
+/* süzgeç */
+.suzgec{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.suzgec button{border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.suzgec button.secili{background:var(--lacivert);color:#fff;border-color:var(--lacivert)}
+.ilerleme{height:10px;background:var(--iz);border-radius:999px;overflow:hidden;margin:4px 0 2px}
+.ilerleme div{height:100%;background:var(--yesil);width:0;transition:width .2s}
+.tik{width:20px;height:20px;accent-color:var(--yesil);flex:none;cursor:pointer}
+details.bitti>summary .bas{text-decoration:line-through;color:var(--soluk)}
+/* gün */
+.saat-satir{display:grid;grid-template-columns:104px 1fr;gap:10px;padding:8px 0;border-top:1px dashed var(--cizgi)}
+.saat-satir:first-child{border-top:0}
+.saat{font-weight:700;color:var(--kirmizi-y)}
+/* listeler */
+.esya{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-top:1px dashed var(--cizgi)}
+.esya:first-child{border-top:0}
+.esya input{width:19px;height:19px;margin-top:3px;accent-color:var(--yesil);flex:none;cursor:pointer}
+.esya .ad{font-weight:700}
+.esya.tamam .ad{text-decoration:line-through;color:var(--soluk)}
+.esya .not{color:var(--soluk);font-size:14px}
+.esya .sag{margin-left:auto;display:flex;gap:4px;flex:none;align-items:center}
+.d-var{background:var(--gri-z);color:var(--soluk)}.d-al{background:var(--kirmizi);color:#fff}.d-bak{background:var(--sari);color:#fff}.d-yok{background:none;border:1px dashed var(--gri-c);color:var(--soluk)}
+.liste label{display:flex;gap:10px;align-items:flex-start;padding:7px 2px;border-bottom:1px dashed var(--cizgi);cursor:pointer}
+.liste label:last-child{border-bottom:0}
+.liste input{width:19px;height:19px;margin-top:2px;accent-color:var(--kirmizi);flex:none}
+.liste input:checked+span{color:var(--soluk);text-decoration:line-through}
+ul{margin:4px 0;padding-left:20px}
+li{margin:4px 0}
+.kural{display:flex;gap:12px;align-items:flex-start}
+.kural .sim{font-size:24px;line-height:1.1;flex:none}
+.eslesme{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:8px 0}
+.eslesme div{border-radius:10px;padding:8px;text-align:center;font-size:14px}
+.eslesme .bos{background:var(--gri-z);border:2px dashed var(--gri-c)}
+.eslesme .dolu{background:var(--kir-z);border:2px solid var(--kirmizi)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{padding:6px 8px;border-top:1px solid var(--cizgi);text-align:left;vertical-align:top}
+tr:first-child td,tr:first-child th{border-top:0}
+th{color:var(--baslik);white-space:nowrap}
+footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
+@media (max-width:560px){h1{font-size:23px}dl{grid-template-columns:1fr}dt{margin-top:4px}.saat-satir{grid-template-columns:1fr;gap:0}.eslesme{grid-template-columns:1fr}.eslesme span{text-align:center}}
+@media print{.sekmeler,.suzgec{display:none}section.panel{display:block;padding-bottom:10px}body{background:#fff}details{break-inside:avoid}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header><div class="ic">
+  <div class="ust">Şam Uluslararası Recep Tayyip Erdoğan Türk Okulu · Tanıtım Filmi</div>
+  <h1>🎬 Şam Çekimi – Ekip Rehberi</h1>
+  <p>Üç günlük çekimin yol haritası: film, çekimler, program ve kurallar. Ayrıntılar <b>＋</b> işaretli satırlarda.</p>
+  <div class="rozetler">
+    <span class="rozet">🗓️ 17–18–19 Kasım 2026</span><span class="rozet">⏱️ Film 2 dk 20 sn · 19 plan</span><span class="rozet">🚁 Air 2S + Mini 4 Pro · 🎥 A7 IV + A7 III</span>
+  </div>
+</div></header>
+
+<div class="sekmeler" role="tablist"><div class="ic">
+  <button role="tab" data-sekme="film">🎞️ Film</button>
+  <button role="tab" data-sekme="cekimler">🎯 Çekimler</button>
+  <button role="tab" data-sekme="gunler">🗓️ 3 Gün</button>
+  <button role="tab" data-sekme="ekipman">🧳 Ekipman</button>
+  <button role="tab" data-sekme="kurallar">📏 Kurallar</button>
+  <button role="tab" data-sekme="hazirlik">🎒 Hazırlık</button>
+</div></div>
+
+<div class="ic">
+
+<div class="kart" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:14px">
+  <b>Kodlar:</b>
+  <span><span class="kod" style="background:#6b7686">P</span> Plan: filmdeki sıralı parça (P001–P019)</span>
+  <span><span class="kod">D</span> Drone çekimi (D01–D10)</span>
+  <span><span class="kod y">Y</span> Yerden çekim (Y01–Y11)</span>
+  <span><span class="kod e">E</span> Ek çekim (E01–E08)</span>
+  <span><span class="et et-A">A</span> olmazsa olmaz <span class="et et-B">B</span> gerekli <span class="et et-C">C</span> yedek</span>
+</div>
+
+<!-- ================= FİLM ================= -->
+<section class="panel" id="film">
+  <div class="kart vurgu">
+    <p><b>30 saniyede film:</b> Türkiye'nin yurt dışında okulları var. Bu ağ, on beşinci ülke olarak Suriye'ye, Şam'a ulaştı. Film önce bu ağı, sonra Şam'ı, sonra yeni okulu tanıtıyor.</p>
+    <p><b>Filmin numarası:</b> 1 dakika 56 saniye boyunca ekranda tek bir insan yok; okul bomboş. Sonra kapı açılıyor ve öğrenciler koşarak giriyor. Bütün duygu bu ana saklanmış. Bu yüzden çekimlerin çoğunda kadrajda kimse olmamalı.</p>
+  </div>
+
+  <div class="izgara">
+    <div class="kart"><div class="sayi">15 <small>/ 19 plan</small></div>Bizim Şam'da çekeceğimiz planlar</div>
+    <div class="kart"><div class="sayi">%81</div>Filmin süresinin bizim görüntülerimizden oluşan kısmı</div>
+    <div class="kart"><div class="sayi">2 <small>plan</small></div>Öğrencili planlar. Filmin doruğu</div>
+  </div>
+
+  <h2>Film baştan sona</h2>
+  <p class="ipucu">Şeritte bir bölüme dokun ya da aşağıdan aç: her planda seslendirmenin ne dediği ve ekranda ne görüneceği yazıyor.</p>
+  <div class="serit" id="serit"></div>
+  <div id="bolumler"></div>
+
+  <h2>Bilmen gereken iki şey</h2>
+  <details open>
+    <summary><span class="bas">🔗 Boş → dolu eşleşmesi</span></summary>
+    <div class="govde">
+      <p>Filmin ortasında boş bir koridor ve boş bir sınıf görüyoruz. Sonunda <b>aynı</b> koridor ve <b>aynı</b> sınıf öğrencilerle doluyor. İzleyici bunu ancak iki çekim aynı yerden, aynı kadrajla yapılırsa fark eder.</p>
+      <div class="eslesme"><div class="bos"><b>Y02</b> boş koridor<br>1. gün</div><span>➡️</span><div class="dolu"><b>Y09</b> aynı koridor, öğrencilerle<br>2. gün</div></div>
+      <div class="eslesme"><div class="bos"><b>Y03</b> boş sınıf<br>1. gün</div><span>➡️</span><div class="dolu"><b>Y10</b> aynı sınıf, öğrencilerle<br>2. gün</div></div>
+      <p>Boş çekimde kameranın yerini bantla işaretle; objektifi, yüksekliği ve açıyı not al, telefonla fotoğrafını çek.</p>
+    </div>
+  </details>
+  <details>
+    <summary><span class="bas">💪 Filmin güçlü ve zayıf yanları</span></summary>
+    <div class="govde">
+      <p><b>Güçlü:</b></p>
+      <ul>
+        <li>Tek ve net bir fikir var: boş okul, sonunda çocuklarla doluyor.</li>
+        <li>Sayfa, kapı, defter ve "Yarın" kelimesi aynı düşünceyi taşıyor.</li>
+        <li>Dili dengeli; Suriyeli izleyiciyi incitecek bir cümle yok.</li>
+        <li>Kısa; her plan tek bir bilgi veriyor.</li>
+      </ul>
+      <p><b>Zayıf, yani sahada bizim kapatacağımız açıklar:</b></p>
+      <ul>
+        <li><b>58 saniye boş mekân.</b> Emlak tanıtımı gibi görünebilir. Her mekânda hareket eden bir şey çek: rüzgârda bayrak, suda ışık, perde, yuvarlanan top.</li>
+        <li><b>P016 13 saniye, P008 12 saniye.</b> Tek hareket bu kadar süreyi taşımaz; bu planlar için birden çok açı lazım.</li>
+        <li><b>Şam ile okul arasında bağ zayıf.</b> Okul ile şehri aynı karede gösteren bir çekim (E01) çok işe yarar.</li>
+        <li><b>Hiç ses kaydı planlanmamış.</b> Sahadan ses de topluyoruz (E06).</li>
+      </ul>
+    </div>
+  </details>
+  <details>
+    <summary><span class="bas">📖 Sözlük: kodlar ve terimler</span></summary>
+    <div class="govde"><dl>
+      <dt>P001…P019</dt><dd>Plan. Filmin kurgudaki sıralı parçaları.</dd>
+      <dt>D01…D10</dt><dd>Drone çekimi.</dd>
+      <dt>Y01…Y11</dt><dd>Yerden çekim (gimbal, tripod, monopod).</dd>
+      <dt>E01…E08</dt><dd>Ek çekim. Resmî listede yok, filme güvence ve zenginlik katıyor.</dd>
+      <dt>A / B / C</dt><dd>Öncelik. A: olmazsa film kurulmaz. B: gerekli. C: yedek.</dd>
+      <dt>Altın saat</dt><dd>Gün doğumundan sonraki ve gün batımından önceki yaklaşık bir saat. Şam'da 07:10–08:00 ve 16:30–17:30.</dd>
+      <dt>Mavi saat</dt><dd>Gün batımından hemen sonraki 20–25 dakika.</dd>
+      <dt>Top shot</dt><dd>Kamera dik aşağı bakar, tam tepeden çekim.</dd>
+      <dt>Circle</dt><dd>Okul merkezde kalacak şekilde etrafında tam tur.</dd>
+      <dt>Doruk</dt><dd>Filmin en güçlü anı: P017 ve P018.</dd>
+      <dt>Log</dt><dd>Soluk görünen, renk düzeltmeye pay bırakan kayıt profili.</dd>
+      <dt>ND filtre</dt><dd>Objektif için güneş gözlüğü; gündüz 1/100 enstantaneyi tutmamızı sağlar.</dd>
+      <dt>Waypoint</dt><dd>Drone'un kaydedilmiş bir rotayı aynen tekrar uçması.</dd>
+    </dl></div>
+  </details>
+</section>
+
+<!-- ================= ÇEKİMLER ================= -->
+<section class="panel" id="cekimler">
+  <div class="kart">
+    <b id="sayac">0 / 0 çekildi</b>
+    <div class="ilerleme"><div id="cubuk"></div></div>
+    <span class="ipucu">Biten çekimin kutusunu işaretle. İşaretler yalnızca bu cihazda saklanır.</span>
+  </div>
+  <div class="suzgec" id="suzgec">
+    <button data-s="hepsi" class="secili">Tümü</button>
+    <button data-s="A">🔴 Olmazsa olmaz</button>
+    <button data-s="D">🚁 Drone</button>
+    <button data-s="Y">🎥 Yer</button>
+    <button data-s="E">➕ Ek</button>
+    <button data-s="g1">1. gün</button>
+    <button data-s="g2">2. gün</button>
+    <button data-s="g3">3. gün</button>
+  </div>
+  <div id="cekim-liste"></div>
+</section>
+
+<!-- ================= 3 GÜN ================= -->
+<section class="panel" id="gunler">
+  <div class="kart bilgi">
+    <p><b>Üç kol aynı anda çalışır:</b> 🚁 drone · 🎥 yer kamerası · 🎙️ ses ve saha yönetimi. Öğrencili çekimlerde üçümüz de aynı plandayız.</p>
+    <p class="ipucu" style="margin:0">Gün doğumu ~07:10, gün batımı ~17:30. Saatler dersin 08:00–15:00 olduğu varsayımıyla yazıldı; okuldan gerçek saatler gelince kayacak.</p>
+  </div>
+  <div id="gun-liste"></div>
+  <details>
+    <summary><span class="bas">🌧️ Hava bozarsa ya da zaman daralırsa</span></summary>
+    <div class="govde">
+      <p><b>Hava bozarsa:</b> 1. günün dış çekimleri 3. güne kayar; Eski Şam hazır (stok) görüntüyle çözülür.</p>
+      <p><b>İlk vazgeçilecekler, sırayla:</b> akıllı drone modları → E07, E08 → D08, D10 → Y01 → D02.</p>
+      <p><b>Asla vazgeçilmeyecekler:</b> Y09, Y10, Y02 koridor, Y03, D03, D01, D09.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= EKİPMAN ================= -->
+<section class="panel" id="ekipman">
+  <div class="kart uyari">
+    <p><b>🛒 Hazırlanacak:</b> seri numaralı ekipman listesi, iki kopya. Havalimanı ve sınır geçişi için.</p>
+  </div>
+  <div class="kart">
+    <b id="esya-sayac">0 / 0 çantada</b>
+    <div class="ilerleme"><div id="esya-cubuk"></div></div>
+    <span class="ipucu">Çantaya giren her şeyi işaretle. İşaretler yalnızca bu cihazda saklanır.</span>
+  </div>
+  <div class="suzgec" id="esya-suzgec">
+    <button data-s="hepsi" class="secili">Tümü</button>
+    <button data-s="al">🛒 Hazırlanacak</button>
+    <button data-s="bak">🔎 Kontrol et</button>
+    <button data-s="D">🚁 Drone</button>
+    <button data-s="K">🎥 Kamera</button>
+    <button data-s="S">🎙️ Ses ve saha</button>
+  </div>
+  <div id="esya-liste"></div>
+
+  <details>
+    <summary><span class="bas">📷 Hangi kamera, hangi lens, hangi çekim?</span></summary>
+    <div class="govde">
+      <p><b>A7 IV</b> ana kamera, çoğunlukla gimbalde: 4K 50p, Super 35 kırpmalı (1,5×), 10-bit, S-Log3. <b>A7 III</b> tripodda: 4K 25p, tam kare, 8-bit, S-Log2.</p>
+      <p class="ipucu">Kırpma yüzünden A7 IV'te lensler 1,5 kat dar görür: 16-35 mm, 24-52 mm gibi davranır. Geniş açı gereken yerde 12-24 GM kullanılır.</p>
+      <table>
+        <tr><th>12-24 GM</th><td>A7 IV'te geniş açı: Y02 koridor, Y03 derslik, Y09 kapı, Y10 monopod hareketi. Önüne filtre takılmıyor; iç mekân lensi.</td></tr>
+        <tr><th>16-35 GM</th><td>Gimbalde genel lens; dışarıda ND ile: Y06 sahalar, Y02 oyun alanı, cephe.</td></tr>
+        <tr><th>24-70 GM</th><td>İç mekân orta planlar: Y04 laboratuvarlar, Y05 atölyeler.</td></tr>
+        <tr><th>70-200 GM</th><td>Tripodda tele: Y01 Şam silueti, Y11 büst ve bayrak, E01 okuldan şehre bakış.</td></tr>
+        <tr><th>85 GM</th><td>Flu arka planlı detaylar: Y07 kitaplar, Y08 kitaplardan küreye odak kayması, E04 kalem ucu.</td></tr>
+      </table>
+    </div>
+  </details>
+  <details>
+    <summary><span class="bas">✈️ Uçakla taşıma</span></summary>
+    <div class="govde"><ul>
+      <li><b>Bütün lityum piller kabin bagajında</b> (drone, kamera, gimbal, ışık, powerbank); uçları bantlı ya da kılıfta. Bagaja pil verilmez.</li>
+      <li><b>Kabinde:</b> gövdeler, lensler, drone, kaydedici, diskler, dizüstü. <b>Bagajda:</b> tripodlar, monopod, ışık ayakları, kablolar.</li>
+      <li>Havayolunun pil ve drone kuralını uçuştan önce kontrol et.</li>
+      <li>Dönüşte diski ve kartları iki ayrı kişinin çantasına koy.</li>
+      <li>Okulda elektrik kesilebilir: bütün pilleri gece otelde doldur, sahaya dolu powerbank götür.</li>
+    </ul></div>
+  </details>
+</section>
+
+<!-- ================= KURALLAR ================= -->
+<section class="panel" id="kurallar">
+  <h2>Değişmez kurallar</h2>
+  <p class="ipucu">Her birine dokun: neden var, sahada ne anlama geliyor.</p>
+  <div id="kural-liste"></div>
+
+  <h2>Teknik ayarlar</h2>
+  <div class="kart"><table>
+    <tr><th>Air 2S (ana drone)</th><td>4K 50p · 1/100 sn · D-Log 10-bit · ND filtreyle</td></tr>
+    <tr><th>Mini 4 Pro</th><td>4K 50p · D-Log M 10-bit · ND yok: ISO 100, enstantane ışığa göre</td></tr>
+    <tr><th>A7 IV (ana kamera)</th><td>4K 50p, Super 35 kırpmalı · 1/100 sn · S-Log3 10-bit</td></tr>
+    <tr><th>A7 III (tripod)</th><td>4K 25p, tam kare · 1/50 sn · S-Log2 8-bit</td></tr>
+    <tr><th>Hangi kamera?</th><td>Hareketli ve öğrencili planlar A7 IV'te. Sabit detay ve tele planlar A7 III'te. Renk profilleri üç gün boyunca değişmez.</td></tr>
+    <tr><th>Beyaz dengesi</th><td>Elle ayarlı ve sabit. Aynı mekânda hep aynı değer.</td></tr>
+    <tr><th>ISO</th><td>Mümkün olan en düşük.</td></tr>
+    <tr><th>Pozlama</th><td>Kilitli. Gökyüzü ve pencereler patlamaz.</td></tr>
+  </table></div>
+  <details>
+    <summary><span class="bas">🎬 Kayıt disiplini</span></summary>
+    <div class="govde"><ul>
+      <li>Her harekette başta ve sonda <b>3 saniye sabit dur</b>.</li>
+      <li>Her çekim <b>en az 3 tekrar</b>; her tekrar en az 20 saniye.</li>
+      <li>Drone: Cine modu. Yer: gimbal, tripod ya da monopod. <b>Elde serbest çekim yok.</b> Yana kayışlar gimbal ile.</li>
+      <li>Havadan 10–15 RAW (DNG) fotoğraf; altın saatte en az 5'i.</li>
+      <li>Dosya adı: <b>ÇekimNo_TekrarNo_Tarih</b>. Örnek: D03_T02_20261117.MP4</li>
+      <li>Her akşam diske yedek. Kartları dönene kadar silme; ikinci kopya onlar.</li>
+    </ul></div>
+  </details>
+  <details>
+    <summary><span class="bas">🚁 İki drone: hangisi ne zaman</span></summary>
+    <div class="govde">
+      <table>
+        <tr><th>Air 2S</th><td>Ana drone. ND filtresi var, sensörü büyük, rüzgârda daha sakin. Gündüz ve altın saat çekimlerinin hepsi: D01, D04, D05, D06, D07, D09, D10.</td></tr>
+        <tr><th>Mini 4 Pro</th><td>Yukarı bakabiliyor, waypoint'i var, gerçek dikey çekiyor. D03'ün alçak başlangıcı, mavi saatte waypoint tekrarları, dikey çekimler.</td></tr>
+      </table>
+      <ul>
+        <li><b>Mini'de ND yok.</b> Gündüz enstantanesi hızlanır; bayrak ve su kesik görünür. Bu yüzden gündüz hareketli konuları Air 2S çeker. Gün batımından sonra Mini de 1/100'de çalışır.</li>
+        <li><b>Waypoint yalnızca Mini'de.</b> D01 ve D05 rotasını Mini ile kaydet; mavi saatte aynı rotayı tekrar uç.</li>
+        <li><b>D03 iki drone ile de çekilir;</b> filmin en önemli okul planı.</li>
+        <li><b>Pil:</b> gerçekçi süre pil başına 20–25 dakika. Altın saate iki drone'un da bütün pilleri dolu girilir.</li>
+        <li><b>Biri arızalanırsa</b> diğeri listenin tamamını çeker.</li>
+        <li><b>Öğrenciler bahçedeyken okul üzerinde uçuş yok.</b></li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ================= HAZIRLIK ================= -->
+<section class="panel" id="hazirlik">
+  <h2>🚨 Yola çıkmadan çözülecekler</h2>
+  <div class="kart liste">
+    <label><input type="checkbox"><span>📞 <b>Veli izinleri:</b> okul, Y09 ve Y10 için öğrenci grubunu belirlesin ve izinleri toplamaya başlasın. En geç Çarşamba sabahı elimizde olmalı.</span></label>
+    <label><input type="checkbox"><span>🕗 <b>Ders saatleri:</b> ilk ders, teneffüsler, öğle arası, son ders.</span></label>
+    <label><input type="checkbox"><span>🧭 <b>Cephe ve ana kapı hangi yöne bakıyor?</b> D03 ve Y09'un saati buna bağlı.</span></label>
+    <label><input type="checkbox"><span>🚁 <b>Drone izni:</b> ülkeye giriş ve uçuş için yazılı belge.</span></label>
+    <label><input type="checkbox"><span>🕌 <b>Eski Şam çekim izni:</b> yoksa Y01 hazır görüntüyle çözülecek.</span></label>
+    <label><input type="checkbox"><span>🏊 <b>Havuz:</b> açık mı kapalı mı, dolu mu?</span></label>
+    <label><input type="checkbox"><span>✍️ <b>Y10 provası:</b> monopod hareketini gitmeden bir kez dene.</span></label>
+    <label><input type="checkbox"><span>👥 <b>Görev dağılımı:</b> kim drone, kim yer kamerası, kim ses ve saha?</span></label>
+  </div>
+
+  <div class="kart bilgi">🧳 Çanta listesi artık <b>Ekipman</b> sekmesinde: kimde ne var, ne alınacak, hangi lens hangi çekimde.</div>
+  <details>
+    <summary><span class="bas">⚠️ Riskler ve çözümleri</span></summary>
+    <div class="govde"><table>
+      <tr><th>Drone izni çıkmazsa</th><td>Bütün D çekimleri düşer. Yedek: cephe karşısından tele, çatıdan geniş plan.</td></tr>
+      <tr><th>Okul açıkken insansız çekim</th><td>Dış çekimler öğrenciler gelmeden ve gittikten sonra. İç mekânlar ders saatinde, tek tek kapatılarak.</td></tr>
+      <tr><th>Rüzgâr yoksa</th><td>Bayraklar sarkar, D03 zayıflar. Rüzgârlı ilk fırsatta çek.</td></tr>
+      <tr><th>Rüzgâr sertse</th><td>Uzun ve yüksek uçuşları Air 2S ile yap, Mini 4 Pro'yu sakin havada kullan; cepheyi yerden de çek.</td></tr>
+      <tr><th>Y10 tek planda tutmazsa</th><td>E04 güvenlik planlarıyla kesmeli kurulur. E04 bu yüzden zorunlu.</td></tr>
+      <tr><th>Y09'da kapıdan ışık gelmezse</th><td>1. gün ikindi kapıyı izle; gerekirse saati değiştir.</td></tr>
+      <tr><th>Havuz kapalıysa</th><td>D06 yapılamaz; yerden (Y06) çekilir.</td></tr>
+      <tr><th>Yeterli öğrenci yoksa</th><td>Y09 için 25–30, Y10 için bir sınıf dolusu gerekli. Az ise kadrajı daralt.</td></tr>
+    </table></div>
+  </details>
+
+  <h2>✅ Sahadan ayrılmadan önce</h2>
+  <div class="kart liste">
+    <label><input type="checkbox"><span><b>Y09</b>: kapı açılışı, koşu ve koridorun dolması tek planda, kusursuz bir tekrar var</span></label>
+    <label><input type="checkbox"><span><b>Y10</b> denendi ve <b>E04</b>'ün üç planı da çekildi</span></label>
+    <label><input type="checkbox"><span><b>Y02 ↔ Y09</b> ve <b>Y03 ↔ Y10</b> yan yana izlendi, eşleşiyor</span></label>
+    <label><input type="checkbox"><span><b>D03</b>: bayraklar dalgalanıyor, büst kadrajda</span></label>
+    <label><input type="checkbox"><span><b>D01</b> kesintisiz ve sabit hızlı; <b>D09</b>'da üst üçte bir gökyüzü boş</span></label>
+    <label><input type="checkbox"><span>İnsansız çekimlerde insan, araç, hassas tesis yok (büyüterek bakıldı)</span></label>
+    <label><input type="checkbox"><span>Saha sesleri ve havadan RAW fotoğraflar alındı</span></label>
+    <label><input type="checkbox"><span>Veli izinleri bizde; dosyalar adlandırıldı, diske yedeklendi, kartlar silinmedi</span></label>
+  </div>
+</section>
+
+<footer>v005 · 13 Kasım 2026 · Dayanak: Senaryo v009 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
+</div>
+
+<script>
+/* ---------- VERİ ---------- */
+var BOLUMLER = [
+ {ad:"🌍 Yurt dışındaki okullar", sure:19, kisa:"Okul ağı", biz:false, ozet:"Türkiye'nin 14 ülkedeki okulları haritada. Harita Şam'a yaklaşır. Bu bölüm grafik; biz çekmiyoruz.", planlar:[
+   {p:"P001",s:6,ses:"Avrupa'dan Orta Asya'ya, Kafkasya'dan Körfez'e…",g:"Koyu zeminli dünya haritası; Türkiye'den çıkan ışık çizgileri okulların olduğu ülkelere uzanır.",k:"Grafik"},
+   {p:"P002",s:8,ses:"Türkiye'nin yurt dışındaki okulları, on dört ülkede geleceği Türkçe ile inşa ediyor.",g:"Bakü, Doha, Bişkek gibi şehirlerdeki okullardan kısa görüntüler.",k:"Bakanlık arşivi"},
+   {p:"P003",s:5,ses:"Ve yıllar sonra, yeni bir ülkede yeni bir okul…",g:"Harita Suriye'ye yaklaşır, Şam'da parlak bir nokta yanar.",k:"Grafik"}]},
+ {ad:"🕌 Şam", sure:12, kisa:"Şam", biz:true, ozet:"Şehrin kendisi: kadim, saygın, sakin. Turistik değil, ağırbaşlı görüntüler.", planlar:[
+   {p:"P004",s:6,ses:"Şam… Dünyanın en kadim şehirlerinden biri.",g:"Şafakta Şam silueti; minareler ve kubbeler, sabah ışığı yeni vuruyor.",k:"Y01"},
+   {p:"P005",s:6,ses:"Binlerce yıldır ilmin, sanatın ve medeniyetin buluştuğu bir kavşak.",g:"Emevi Camii avlusu, Hamidiye Çarşısı'nın kemerli girişi, boş bir taş sokak.",k:"Y01"}]},
+ {ad:"🤝 Dayanışma", sure:8, kisa:"YZ", biz:false, ozet:"Suriyeli çocukların Türkiye'de okula devam ettiği yıllar, tek cümleyle. Yapay zekâ ile üretilecek; biz çekmiyoruz.", planlar:[
+   {p:"P006",s:8,ses:"Zor yıllarda yüz binlerce Suriyeli çocuk, Türkiye'deki okullarda eğitimine devam etti.",g:"Türkiye'de bir sınıf; pencere kenarındaki sırada açık defter ve kalem. İnsan yok.",k:"Yapay zekâ"}]},
+ {ad:"↘️ Geçiş", sure:6, kisa:"↘", biz:true, ozet:"Geçmişten bugüne, şehirden okula geçtiğimiz an. Drone çok uzaktan okula yaklaşır.", planlar:[
+   {p:"P007",s:6,ses:"Bugün ise Şam'da yeni bir sayfa açıldı.",g:"Okul önce küçük bir nokta; kesintisiz, yavaş yaklaşmayla kadrajı doldurur.",k:"D01 · D02"}]},
+ {ad:"🏫 Okul", sure:58, kisa:"Okul · 58 sn", biz:true, ozet:"Okulun adı, kademeleri, kapasitesi, donanımı ve eğitim dili. Hepsi insansız: mekânlar, nesneler ve ışık konuşur.", planlar:[
+   {p:"P008",s:12,ses:"Şam Uluslararası Recep Tayyip Erdoğan Türk Okulu, Türkiye Cumhuriyeti Millî Eğitim Bakanlığına bağlı olarak eğitim öğretime başladı.",g:"Ön cephe; bayraklar ve Atatürk büstü kadrajda. Drone alçaktan yükselir.",k:"D03 · Y11"},
+   {p:"P009",s:7,ses:"Anaokulundan on ikinci sınıfa kadar her kademede eğitim veren okul,",g:"Renkli anaokulu oyun alanı; ardından uzun, aydınlık, boş koridor.",k:"Y02"},
+   {p:"P010",s:6,ses:"36 dersliği ve 900 öğrenci kapasitesiyle geleceğe hazırlanıyor.",g:"Boş, düzenli bir derslik; kapıdan girilip tahtaya doğru ilerlenir.",k:"Y03"},
+   {p:"P011",s:7,ses:"Etkileşimli tahtalarla donatılmış sınıflar, fen ve bilgisayar laboratuvarları,",g:"Açık etkileşimli tahta; mikroskop ve deney düzeneği; sıra sıra açık ekranlar.",k:"Y04"},
+   {p:"P012",s:4,ses:"resim ve müzik atölyeleri,",g:"Şövalede tuval, fırçalar, paletler; enstrümanlar.",k:"Y05"},
+   {p:"P013",s:9,ses:"yüzme havuzu, spor sahaları ve oyun alanlarıyla, öğrencilerin her yönüyle gelişmesi için tasarlandı.",g:"Havuzda ışık yansımaları, halı saha ortasında tek bir top, basketbol ve voleybol sahaları.",k:"D06 · D07 · Y06"},
+   {p:"P014",s:7,ses:"Eğitim, Türkiye Yüzyılı Maarif Modeli doğrultusunda Türkçe olarak yürütülüyor.",g:"Sıralarda Türkçe ders kitapları ve defterler; tahtanın kenarında Türk bayrağı.",k:"Y07"},
+   {p:"P015",s:6,ses:"Arapça ve İngilizce derslerle öğrenciler, dünyaya açılıyor.",g:"Yan yana üç dilde ders kitabı ve bir dünya küresi; odak kitaptan küreye kayar.",k:"Y08"}]},
+ {ad:"⭐ Önem", sure:13, kisa:"Önem", biz:true, ozet:"Bu okulun neden önemli olduğu: on beşinci ülke ve iki ülke arasında eğitim iş birliği. Okul havadan, bütün olarak.", planlar:[
+   {p:"P016",s:13,ses:"Bu okulla yurt dışındaki okullarımız on beşinci ülkeye ulaştı; iki kardeş ülke arasındaki eğitim iş birliğinde yeni ve kalıcı bir sayfa açıldı.",g:"Okul tam tepeden ya da etrafında yavaş bir tam tur; bayraklar seçiliyor.",k:"D04 · D05"}]},
+ {ad:"🚪 Kapanış", sure:24, kisa:"Kapanış · 24 sn", biz:true, ozet:"Filmin doruğu. İlk kez insan görürüz: kapı açılır, öğrenciler girer; bir el deftere \"Yarın\" yazar.", planlar:[
+   {p:"P017",s:8,ses:"Açılan bu kapı, yarınlara açılıyor…",g:"Kapalı ana kapı açılır; öğrenciler ışığın içinden koşarak girer, boş koridor dolar.",k:"Y09"},
+   {p:"P018",s:9,ses:"Yarınlar, bu sınıflarda yazılacak.",g:"Tepeden: bir el deftere \"Yarın\" yazar. Kamera açılır: sınıf öğrencilerle dolu.",k:"Y10"},
+   {p:"P019",s:7,ses:"Şam Uluslararası Recep Tayyip Erdoğan Türk Okulu.",g:"Akşam ışığında okulun genel görünümü; üstüne okulun adı yazılacak.",k:"D09"}]}
+];
+
+var CEKIMLER = [
+ {k:"D01",o:"A",ad:"Uzaktan uzun yaklaşma",p:"P007",g:[1,2],ne:"Okul önce kadrajda küçük bir nokta. Sabit, çok yavaş ve kesintisiz ileri uçuşla okula yaklaşılır.",nasil:"<b>🚁 Air 2S</b> (ND'li, rüzgârda daha sakin). Mavi saatte aynı rota Mini 4 Pro ile waypoint olarak tekrar edilir. Gimbal açısı ve yön hiç değişmez. Başlangıç okuldan 500–800 m uzakta, 80–120 m irtifada; okula 100 m kala biter.",isik:"Sabah ve akşam altın saati",sure:"60–90 sn × 3",neden:"Şehirden okula geçişi sağlayan tek plan. \"Bugün ise Şam'da yeni bir sayfa açıldı\" cümlesi bunun üstüne gelir.",dikkat:"Hız değişirse kullanılamaz. Rüzgârlıysa sakin saati bekle. Kalkış noktasını ve irtifayı not al; Mini tekrarı aynı yerden başlasın."},
+ {k:"D02",o:"C",ad:"Okula alçalma",p:"P007",g:[1],ne:"D01'in devamı: okula yaklaşıp alçalma, ön cephe kadraja oturur.",nasil:"<b>🚁 Air 2S.</b> 60 m'den 20 m'ye, sabit hızla, tek yönde.",isik:"Sabah altın saati",sure:"25 sn × 3",neden:"D01'in sonunu güçlendirmek için kurguya seçenek.",dikkat:"Zaman daralırsa ilk bırakılacaklardan."},
+ {k:"D03",o:"A",ad:"Ön cephe, yükselme",p:"P008",g:[1,2],ne:"Cephenin tam karşısından, giriş hizasında alçaktan başlayıp dikey yükselme. Bayraklar ve Atatürk büstü kadrajda, simetrik.",nasil:"<b>🚁 İki drone ile de çekilir.</b> Mini 4 Pro alçaktan yukarı bakarak başlar; Air 2S aynı yükselmeyi ND ile, bayraklar düzgün akarken çeker. Kurguda iyi olan kullanılır. 2–3 m'den 25–30 m'ye. Gimbal cepheyi ortada tutar. Bir tekrar da ters yönde (yukarıdan aşağı).",isik:"Cephenin güneş aldığı altın saat (yönüne göre sabah ya da akşam)",sure:"25 sn × 3 + ters yön 1",neden:"Okulun adının söylendiği 12 saniye. Filmin en önemli okul planı.",dikkat:"Kadrajın alt üçte biri sade kalsın: oraya okulun adı yazılacak. Bayraklar dalgalanırken çek."},
+ {k:"D04",o:"B",ad:"Top shot (tam tepeden)",p:"P016",g:[1],ne:"Gimbal dik aşağı; okul ve bahçesi tam tepeden, geometrik.",nasil:"<b>🚁 Air 2S.</b> Üç varyasyon: sabit (60–80 m), yerinde yavaş dönüş, dikey yükselme (40 → 120 m).",isik:"Öğle (kısa gölge) ve akşam altın saati (uzun gölge)",sure:"Her varyasyon 20–30 sn × 2",neden:"P016 13 saniye sürüyor; tek hareket yetmez, bu ve D05 birlikte kullanılacak.",dikkat:"Çatı temiz olmalı. Bina kadrajın ortasında."},
+ {k:"D05",o:"B",ad:"Circle (okul etrafında tur)",p:"P016",g:[1],ne:"Okul merkezde; etrafında yavaş ve sabit hızla tam tur.",nasil:"<b>🚁 Air 2S.</b> Mavi saatte Mini 4 Pro ile waypoint tekrarı. Yarıçap 80–120 m, irtifa 40–60 m. Bir tur en az 60 saniye. İki yönde de çek. POI modu kullanılabilir.",isik:"Akşam altın saati",sure:"Tam tur 60–90 sn × 2",neden:"Okulu bütün olarak ve çevresiyle gösterir.",dikkat:"Çevredeki hassas tesisler kadraja giriyorsa o yayı kullanma, tekrar et."},
+ {k:"D06",o:"B",ad:"Havuz, tepeden",p:"P013",g:[1],ne:"Yüzme havuzu tam tepeden; su yüzeyinde ışık oyunları, yavaş yana kayış.",nasil:"<b>🚁 Air 2S</b> (su yüzeyi ND olmadan kesik görünür). 15–25 m irtifa.",isik:"Öğle",sure:"20 sn × 3",neden:"Filmin en canlı görüntülerinden biri; su hareket katıyor.",dikkat:"Havuz kapalıysa bu çekim yok, Y06 ile yerden. Kenarda eşya olmasın."},
+ {k:"D07",o:"B",ad:"Spor sahaları",p:"P013",g:[1],ne:"Halı saha, basketbol ve voleybol sahaları; her biri ayrı ve bir de hepsi birlikte geniş.",nasil:"<b>🚁 Air 2S.</b> 30–40 m, gimbal 45°, yana kayış ya da yarım tur. Halı sahanın ortasına tek bir top koy.",isik:"İkindi",sure:"Saha başına 20 sn × 2, geniş 25 sn × 3",neden:"Müziğin yükseldiği bölüm; ritimli kesilecek.",dikkat:"Teneffüs dışında çek; sahada kimse olmasın."},
+ {k:"D08",o:"C",ad:"Anaokulu oyun alanı",p:"P009 yedek",g:[1],ne:"Oyun alanı tepeden ya da alçaktan yana kayış.",nasil:"<b>🚁 Air 2S.</b> 10–15 m.",isik:"Sabah",sure:"20 sn × 2",neden:"Y02'nin oyun alanı çekimine yedek.",dikkat:"Oyuncaklar temiz ve düzenli olsun."},
+ {k:"D09",o:"A",ad:"Kapanış görüntüsü",p:"P019",g:[1],ne:"Okulun genel görünümü; drone çok yavaş geri çekilip yükselir.",nasil:"<b>🚁 Air 2S.</b> 60–80 m. Okul kadrajın alt yarısında, üst üçte bir boş gökyüzü.",isik:"Akşam altın saati",sure:"30 sn × 3",neden:"Filmin son görüntüsü. Üstteki boş gökyüzüne okulun adı ve Bakanlık yazısı gelecek.",dikkat:"Gökyüzü boş kalmazsa grafik sığmaz. Hareket çok yavaş."},
+ {k:"D10",o:"C",ad:"Mavi saat, ışıklar yanık",p:"P019 yedek",g:[1,3],ne:"D09 ile aynı açı; okulun iç ve dış ışıkları yanıyor.",nasil:"<b>🚁 Air 2S</b> (büyük sensör, karanlıkta daha temiz). Ardından Mini 4 Pro ile D01 ve D05 waypoint tekrarları. 60–80 m.",isik:"Gün batımından hemen sonra (17:30–17:55)",sure:"30 sn × 2",neden:"Kapanışa güçlü bir alternatif.",dikkat:"Işıkların açılacağı saati okulla önceden ayarla. Geç kalırsan görüntü kumlanır."},
+ {k:"Y01",o:"C",ad:"Eski Şam",p:"P004–P005",g:[3],ne:"Şehir silueti (tele), Emevi Camii avlusu ve revakları, Hamidiye Çarşısı'nın kemerli girişi, boş bir taş sokak.",nasil:"Her görüntü sabit ya da çok yavaş kaydırma; 10–15 saniye.",isik:"Şafak ve sabah altın saati",sure:"Her mekân × 3",neden:"Filmin Şam'ı tanıttığı 12 saniye. Kendi çekimimiz hazır görüntüden çok daha değerli.",dikkat:"İnsansız olmalı; bu yüzden çok erken. İzin yoksa zorlamıyoruz, hazır görüntü kullanılır."},
+ {k:"Y02",o:"A",ad:"Oyun alanı ve boş koridor",p:"P009",g:[1],ne:"İki çekim: anaokulu oyun alanı alçak açıdan; uzun, aydınlık, boş koridorda ileri yürüyüş.",nasil:"Gimbal. Koridorda göz hizasında, düz ileri.",isik:"Sabah",sure:"Her biri × 3",neden:"Koridor, 2. gün öğrencilerin koşarak dolduracağı (Y09) koridorun boş hâli.",dikkat:"Ana kapının açıldığı koridoru çek. Kamera yerini bantla, ayarları not al."},
+ {k:"Y03",o:"A",ad:"Boş derslik",p:"P010",g:[1],ne:"Tefrişatı tamam, boş bir sınıf. Kapıdan girilip tahtaya doğru tek planda ileri kayış.",nasil:"Gimbal. Son kare: tahtaya bakan geniş plan.",isik:"Sabah, pencereden gün ışığı girerken",sure:"× 3",neden:"2. gün aynı sınıfı öğrencilerle dolu göreceğiz (Y10). Bu, onun boş hâli.",dikkat:"Y10'u çekeceğimiz sınıfı seç. Son kareyi fotoğrafla; Y10 aynı karede bitecek."},
+ {k:"Y04",o:"B",ad:"Tahta ve laboratuvarlar",p:"P011",g:[1],ne:"Üç mekân: açık etkileşimli tahta, fen laboratuvarı (mikroskop, deney düzeneği), bilgisayar laboratuvarı (açık ekranlar).",nasil:"Gimbal ya da tripod, 24-70 GM. Her mekândan en az 3 farklı kadraj: geniş, orta, detay.",isik:"Sabah",sure:"Her kadraj × 3",neden:"Okulun donanımını gösteren 7 saniye; her mekân 2 saniye görünecek.",dikkat:"Ekranlarda okunabilir resmî yazı olmasın; nötr görsel ya da okul logosu aç."},
+ {k:"Y05",o:"B",ad:"Resim ve müzik atölyeleri",p:"P012",g:[1],ne:"Şövalede tuval, fırçalar, boya paletleri; enstrümanlar.",nasil:"Yakın detay planları; fırça ucundan, tellerden.",isik:"Sabah",sure:"Her detay × 3",neden:"Kısa (4 sn) ama renkli bir an.",dikkat:"Malzemeler düzenli ve kullanıma hazır görünsün."},
+ {k:"Y06",o:"B",ad:"Havuz ve sahalar, yerden",p:"P013",g:[1],ne:"Havuz ve spor sahalarının yerden görünümü; halı saha ortasında tek top.",nasil:"Gimbal, alçak açı, yavaş kayan geniş planlar.",isik:"İkindi",sure:"× 3",neden:"Drone görüntüleriyle (D06, D07) birlikte kesilecek.",dikkat:"Havuzda su yüzeyindeki ışığı yakala."},
+ {k:"Y07",o:"B",ad:"Türkçe ders kitapları",p:"P014",g:[1],ne:"Sıraların üzerinde düzenli Türkçe ders kitapları ve defterler; tahtanın kenarında Türk bayrağı.",nasil:"Gimbal ile sıra hizasından yana kayış; arka plan flu.",isik:"Sabah",sure:"× 3",neden:"\"Eğitim Türkçe yürütülüyor\" cümlesinin görüntüsü.",dikkat:"Kitap kapakları temiz ve güncel olsun."},
+ {k:"Y08",o:"B",ad:"Üç dilde kitap ve küre",p:"P015",g:[1],ne:"Sıra üzerinde yan yana Türkçe, Arapça ve İngilizce ders kitapları; yanında dünya küresi.",nasil:"Tripod, 85 GM, sabit yakın plan. Odak kitaplardan küreye kayar.",isik:"Sabah",sure:"× 3",neden:"\"Öğrenciler dünyaya açılıyor\" cümlesinin görüntüsü.",dikkat:"Kitaplar ve küre okulda yoksa biz götürüyoruz."},
+ {k:"Y09",o:"A",ad:"⭐ Kapı açılır, öğrenciler girer",p:"P017",g:[2],ne:"Ana kapı kapalı, simetrik kadraj. Kapı ağır ağır açılır, ışık dolar; okul kıyafetli öğrenciler kameranın iki yanından koşarak girer ve koridor dolar.",nasil:"A7 IV + 12-24 GM. Kamera içeride, koridorda, sabit. 0–1,5 sn kapalı kapı, 1,5–3 sn kapı açılır, 3–8 sn öğrenciler geçer.",isik:"İkindi, kapıdan ışık girerken",sure:"2 prova + en az 5 tekrar",neden:"Filmin doruğu. Filmde ilk kez insan ve ilk kez yakından çocuk sesi.",dikkat:"Yalnızca veli izni olan öğrenciler. Koşu yönünü önceden göster. Kameraya bakan olmasın. Y02 ile aynı koridor, aynı kamera yeri."},
+ {k:"Y10",o:"A",ad:"⭐ \"Yarın\" yazan el, dolu sınıf",p:"P018",g:[2],ne:"Tepeden yakın plan: açık defter, bir öğrencinin eli \"Yarın\" yazar. Sonra kamera tek hamlede geri ve yukarı çıkar: sınıf öğrencilerle dolu, herkes tahtaya bakıyor.",nasil:"A7 IV + 12-24 GM, gimbal 1,5–2 m uzatılmış monopodun ucunda. Bu set ağır (yaklaşık 3 kg); monopodu iki elle taşı. <b>Üç kişilik hareket:</b> biri monopodu taşır (kamera defterin 50–60 cm üstünde, dik aşağı; yazı bitince kaldırır ve iki adım geri çekilir), biri gimbalin eğimini aşağıdan ufka çevirir, biri öğrencileri yönetir. Öğrenci arka sırada, koridor tarafında otursun.",isik:"Gün ışığının sınıfa girdiği saat",sure:"5 öğrencisiz prova + en az 8 tekrar",neden:"Filmin son cümlesi: \"Yarınlar, bu sınıflarda yazılacak.\"",dikkat:"Kelime gerçekten yazılır, sonradan eklenmez; her tekrarda yeni sayfa. Sonda 3 sn sabit dur. Ardından E04'ü mutlaka çek."},
+ {k:"Y11",o:"B",ad:"Büst, bayrak, tabela detayları",p:"Ara plan",g:[1],ne:"Atatürk büstü, dalgalanan bayraklar, okul tabelası ve logosu; yakın planlar.",nasil:"Tripod, 70-200 GM.",isik:"Altın saat",sure:"Her detay × 3",neden:"P008 12 saniye sürüyor; drone planının arasına bu detaylar girecek.",dikkat:"Bayrak için rüzgârı bekle."},
+ {k:"E01",o:"B",ad:"Okuldan Şam'a bakış",p:"P007 / P016",g:[2],ne:"Okul ön planda, arkada şehir ya da dağ silueti.",nasil:"<b>🚁 Air 2S</b> ya da çatıdan 70-200 GM. Drone ile ya da çatıdan tele objektifle.",isik:"Altın saat",sure:"× 3",neden:"\"Bu okul Şam'da\" duygusunu veren tek kare olur; filmde şehir ile okul arasındaki bağ zayıf.",dikkat:"Hassas tesisler kadraja girmesin."},
+ {k:"E02",o:"B",ad:"Canlılık detayları",p:"P008–P015 arası",g:[1,2],ne:"Dalgalanan bayrak yakın plan, su yüzeyi, havalanan perde, yuvarlanan top, dönen kitap sayfası.",nasil:"Tripod ya da gimbal; mümkünse bir tekrar da 100p.",isik:"Her saat",sure:"Her biri 10–15 sn",neden:"58 saniyelik insansız bölümün cansız görünmesini engeller.",dikkat:"Fırsat buldukça topla; ayrı bir zaman ayırmaya gerek yok."},
+ {k:"E03",o:"B",ad:"Y09 güvenlik planları",p:"P017",g:[2],ne:"Aynı koşu, farklı açılardan: dışarıdan öğrencilerin sırtından, alçaktan ayaklar ve çantalar, yakın yüzler.",nasil:"Y09 ana planı bittikten sonra, aynı öğrencilerle.",isik:"İkindi",sure:"Her açı × 2",neden:"Ana plan tek tekrarda tutmazsa P017 bu planlarla kurulur.",dikkat:"Öğrenciler yorulmadan bitir."},
+ {k:"E04",o:"A",ad:"Y10 güvenlik planları (zorunlu)",p:"P018",g:[2],ne:"Üç ayrı plan: tripodda sabit tepe plan (el yazarken), ayrı geniş plan (dolu sınıf, Y03 ile aynı kadraj), kalem ucu yakın plan.",nasil:"Tripod. Y10 denemelerinden hemen sonra.",isik:"Y10 ile aynı",sure:"Her plan × 3",neden:"Vincimiz yok; monopod hareketi tutmazsa P018 bu üç planla kesmeli kurulur.",dikkat:"Y10 tutsa bile çek."},
+ {k:"E05",o:"C",ad:"Gün doğumu zaman atlaması",p:"P007 alternatif",g:[1],ne:"Sabit kadrajda cephe; gölge yavaşça çekilir, ışık cepheye vurur.",nasil:"Tripod; 20–30 dakika aralıklı çekim.",isik:"Gün doğumu",sure:"1 kez",neden:"\"Yeni bir sayfa açıldı\" için alternatif görüntü.",dikkat:"Kamera bu sürede başka işte kullanılamaz."},
+ {k:"E06",o:"B",ad:"🎙️ Saha sesleri",p:"Tüm film",g:[1,2,3],ne:"Şam sabahı, çarşı, bayrak hışırtısı, boş koridor, zil, kapı, koşan ayaklar, çocuk sesleri, kâğıtta kalem.",nasil:"Ses kaydedici, rüzgârlık. Her ses en az 60 saniye, kesintisiz.",isik:"—",sure:"Her ses 60 sn+",neden:"Film ses tasarımına dayanıyor; resmî listede hiç ses yok. Hazır seslerle bu doku yakalanmaz.",dikkat:"Kayıt sırasında ekip konuşmasın."},
+ {k:"E07",o:"C",ad:"Dikey tekrarlar (9:16)",p:"Sosyal medya",g:[3],ne:"D03, Y09 ve D09'un birer dikey tekrarı.",nasil:"<b>🚁 Mini 4 Pro</b> gerçek dikey çeker; yer kamerası da dikey çevrilir.",isik:"İlgili çekimle aynı",sure:"Her biri × 1",neden:"Sosyal medya sürümü için; sonradan kırpmaktan çok daha iyi.",dikkat:"Yalnızca 3. gün, vakit kalırsa."},
+ {k:"E08",o:"C",ad:"Kamera arkası",p:"Film dışı",g:[3],ne:"Çekimden fotoğraflar ve kısa görüntüler.",nasil:"Telefonla olabilir.",isik:"—",sure:"—",neden:"Bakanlık paylaşımı ve arşiv.",dikkat:"Öğrenci görünen karelerde aynı izin kuralı geçerli."}
+];
+
+var GUNLER = [
+ {ad:"1. gün · Salı 17 Kasım", tema:"🏫 Boş okul: insansız çekimler, keşif, provalar", renk:"var(--lacivert)", satir:[
+   ["06:30","Okula varış, kurulum. Bayraklar ve büst kontrolü."],
+   ["07:10–08:00","🚁 D01, D02, D03 (cephe doğuya bakıyorsa). Öğrenciler gelmeden biter.<br>🎥 Y11 detaylar, E05.<br>🎙️ Okulun sabah sesi, bayrak."],
+   ["08:00–08:45","Müdürle okul turu: Y02, Y03, Y09, Y10 mekânlarını seç, kamera yerlerini bantla."],
+   ["08:45–11:00","🎥 Ders sırasında, mekânlar tek tek kapatılarak: Y03, Y02 koridor, Y04, Y05.<br>🚁 Piller şarjda; pilot yer ekibine yardım eder."],
+   ["11:00–13:00","🚁 D04, D06, D08 (bahçe boşken).<br>🎥 Y07, Y08."],
+   ["13:00–14:00","Mola, ilk yedekleme."],
+   ["14:00–15:00","🚁 D07. 🎥 Y06. 🎙️ Zil ve koridor sesleri."],
+   ["15:00–16:15","🔁 Provalar, öğrencisiz: Y09 kapısında ışığa bak, kadrajı kur. Y10 monopod hareketini boş sınıfta 5 kez dene ve izle."],
+   ["16:30–17:30","🚁 D09 → D05 → D04 (uzun gölge).<br>🎥 Cephe yerden, E02 bayrak."],
+   ["17:30–17:55","🚁 D10 mavi saat."],
+   ["Gece","Diske yedek. Malzemeyi izle, eksik listesi yaz."]]},
+ {ad:"2. gün · Çarşamba 18 Kasım", tema:"⭐ Doruk günü: sabah Y10, ikindi Y09", renk:"var(--kirmizi)", satir:[
+   ["07:10–08:00","🚁 D01 tekrarı, E01, dünün eksikleri.<br>🎥 Eksik dış detaylar."],
+   ["08:00–09:00","Veli izin formlarını teslim al, kıyafet kontrolü, Y10 sınıfını hazırla."],
+   ["09:00–11:00","⭐ <b>Y10</b>: en az 8 tekrar, her tekrarda yeni sayfa. Ardından E04 (zorunlu). 🎙️ Kâğıtta kalem."],
+   ["11:00–13:00","🎥 Dünden kalan iç mekânlar, E02.<br>🚁 Eksik öğle çekimleri."],
+   ["13:00–14:30","Mola, yedekleme. Y10'u izle. Öğrencilere koşu yönünü göster."],
+   ["15:00–16:15","⭐ <b>Y09</b>: iki prova, en az 5 tekrar. Sonra E03. 🎙️ Çocuk sesleri."],
+   ["16:30–17:30","🚁 D01 akşam tekrarı, D03 (cephe batıya bakıyorsa), E01."],
+   ["Gece","Yedek. Y09 ve Y10'u Y02 ve Y03 ile yan yana izle: eşleşiyor mu? Yarın tekrar gerekir mi?"]]},
+ {ad:"3. gün · Perşembe 19 Kasım", tema:"🕌 Eski Şam, tekrarlar, ek çekimler", renk:"var(--altin)", satir:[
+   ["06:15–08:30","🕌 <b>Y01 Eski Şam</b> (izin varsa). 🎙️ Şehrin sabah sesleri.<br>İzin yoksa: okulda sabah tekrarları."],
+   ["09:30–11:00","Okula dönüş. Y10 tutmadıysa tekrar."],
+   ["11:00–13:00","E07 dikey tekrarlar, havadan RAW fotoğraflar, E06 sesler, E08."],
+   ["13:00–14:00","Mola, yedekleme. \"Sahadan ayrılmadan önce\" listesini geç."],
+   ["15:00–16:15","Y09 tutmadıysa tekrar. Tuttuysa kalan eksikler."],
+   ["16:30–17:55","Son altın saat ve mavi saat: eksik A çekimleri, D10."],
+   ["Gece","Tam yedek, dosya adlandırma."]]}
+];
+
+var KURALLAR = [
+ ["🚷","Kadrajda insan yok (Y09 ve Y10 hariç)","Film insanı sona saklıyor; tek bir kişi görünürse doruk etkisini kaybeder. Öğrenci, personel, güvenlik, ekip üyesi, araç, camdaki yansımamız ve gölgemiz dahil. Şüphedeysen tekrar çek."],
+ ["👧","Öğrenciler yalnızca Y09 ve Y10'da","Her öğrenci için veli yazılı izni gerekli. İzni olmayan öğrenci kadraja girmez; kamera arkası fotoğraflarında da aynı kural geçerli."],
+ ["🚩","Bayraklar ve Atatürk büstü her dış çekimde","Okulun kimliği bunlar. Bayraklar asılı, açık ve temiz olmalı; büst açı elverdiği ölçüde kadrajda görünmeli."],
+ ["🧹","Dijital temizleme yok","Sonradan silmek yok. Moloz, kablo, iskele, ambalaj görünüyorsa önce sahada kaldırılır; kaldırılamıyorsa açı değiştirilir."],
+ ["🚫","Askerî ve resmî tesisler kadraja girmez","Okul çevresinde bu tür yapılar olabilir. Görüntüye girdiyse çekim tekrar edilir; özellikle drone turlarında dikkat."],
+ ["🔤","Görüntüde yazı yok, alt üçte bir sade","Okulun adı ve grafikler kurguda eklenecek. Okul çekimlerinde kadrajın alt üçte birini sade tut; ekranlarda okunabilir resmî yazı olmasın."],
+ ["🎭","Senaryoda olmayan sembolik kare kurma","Filmin dili çok dikkatle seçildi. Aklına güzel bir sembolik kare gelirse (bayraklar, yazılar, nesnelerle düzenleme) önce yönetmene sor."],
+ ["🎥","Elde serbest çekim yok","Filmin tonu sakin ve resmî. Her çekim gimbal, tripod, monopod ya da drone ile; sarsıntılı görüntü kullanılmaz."]
+];
+
+var ESYA = [
+ {g:"🚁 Drone", kol:"D", liste:[
+   ["DJI Air 2S ve kumanda (ana drone)","var","Gündüz çekimlerinin çoğu bununla. Yazılımı gitmeden güncelle."],
+   ["Air 2S ND filtre seti","var",""],
+   ["Air 2S pilleri ve şarj cihazı","bak","Kaç pil var? Altın saate en az 3 dolu pil gerekir."],
+   ["DJI Mini 4 Pro ve kumanda","var","D03'ün alçak başlangıcı, mavi saatte waypoint tekrarları, dikey çekimler."],
+   ["Mini 4 Pro: 3 pil ve çoklu şarj istasyonu","var",""],
+   ["microSD kart × 4 (128 GB, V30 ve üzeri)","bak","Her drone için iki kart."],
+   ["Yedek pervaneler (iki model için) ve tornavida","bak",""],
+   ["İki drone'un kayıt ve uçuş izin belgeleri","bak","İkisi de izin yazısında ve ekipman listesinde geçmeli."]]},
+ {g:"🎥 Kameralar", kol:"K", liste:[
+   ["Sony A7 IV (ana kamera)","var","4K 50p, Super 35 kırpmalı, 10-bit, S-Log3."],
+   ["Sony A7 III (tripod kamerası)","var","4K 25p, tam kare, 8-bit, S-Log2."],
+   ["NP-FZ100 pil × 6 ve şarj cihazları","var","İki gövde aynı pili kullanıyor."],
+   ["Hızlı SD kartlar (V60 / V90)","var","A7 IV'te iki karta aynı anda kayıt aç."],
+   ["Sensör ve lens temizlik seti","bak","Körük, bez, sıvı."],
+   ["İki kamera ve drone'da saat ve tarih eşit","bak","Kurguda dosyaları eşleştirmek için."]]},
+ {g:"🔭 Lensler ve filtreler", kol:"K", liste:[
+   ["Sony 12-24 GM","var","A7 IV'te geniş açı: koridor, derslik, Y09, Y10."],
+   ["Sony 16-35 GM","var","Gimbalde genel lens."],
+   ["Sony 24-70 GM","var","İç mekân orta planlar."],
+   ["Sony 70-200 GM ve tripod yakası","var","Şam silueti, büst, bayrak."],
+   ["Sony 85 GM","var","Flu arka planlı detaylar."],
+   ["Sabit ND seti (82 mm ve 77 mm)","bak","16-35 ve 24-70 GM 82 mm; 70-200 ve 85 GM 77 mm. Çaplar uyuyor mu?"]]},
+ {g:"🎛️ Gimbal ve destek", kol:"K", liste:[
+   ["DJI RS gimbal, pil sapı, plakalar","var","Dengeyi 12-24 GM ile gitmeden bir kez kur."],
+   ["Ronin uygulaması telefonda kurulu","bak","Y10'da gimbalin eğimini ikinci kişi telefondan çevirecek."],
+   ["Video tripodu (akışkan başlıklı)","var","Tele çekimler ve detaylar."],
+   ["İkinci tripod","var","Zaman atlaması ve Y10 güvenlik planları."],
+   ["Monopod (1,5–2 m)","var","Y10 hareketi için."],
+   ["Monopod–gimbal bağlantısı","bak","Vida ölçüsü (1/4 – 3/8 inç) uyuyor mu? Adaptör gerekebilir."]]},
+ {g:"🎙️ Ses", kol:"S", liste:[
+   ["Saha ses kaydedici, pilleri ve kartı","var",""],
+   ["Shotgun mikrofon ve kablosu","var",""],
+   ["Tüylü rüzgârlık","bak","Dışarıda bayrak ve şehir sesi rüzgârlık olmadan alınmaz."],
+   ["Kapalı kulaklık","bak","Kaydı sahada dinlemeden geçme."]]},
+ {g:"💡 Işık", kol:"K", liste:[
+   ["Zhiyun Molus 100 × 1","var","Yedek: Y09 kapısı ve karanlık kalan iç mekânlar. Film doğal ışıkla çekiliyor."],
+   ["Molus 100 için güç (pil sapı ya da adaptör) ve ışık ayağı","bak","Okulda elektrik kesilirse pille çalışabilmeli."],
+   ["Küçük cep LED'i","var","Detay planlarında hafif dolgu."],
+   ["Katlanır reflektör","bak","Pencere ışığını yönlendirmek için; hafif ve çok işe yarar."]]},
+ {g:"💾 Yedekleme ve güç", kol:"S", liste:[
+   ["Dizüstü bilgisayar ve şarjı","var",""],
+   ["Harici disk","var","Üç günde tahminen 300–500 GB çıkar; boş alan en az 1 TB olsun."],
+   ["Kart okuyucu (SD ve microSD)","bak",""],
+   ["Çoklu priz ve uzatma kablosu","bak","Şarj istasyonu kurmak için."],
+   ["Powerbank (65 W ve üzeri, 100 Wh altı)","bak","Sahada drone pili ve telefon şarjı."],
+   ["Evrensel priz adaptörü","bak","Türkiye fişleri çoğunlukla uyar; yedekte dursun."]]},
+ {g:"🎬 Sahne malzemesi", kol:"S", liste:[
+   ["Çizgili, markasız temiz defter × 3","bak","\"Yarın\" yazısı için; her tekrarda yeni sayfa."],
+   ["Kurşun kalemler ve kalemtıraş","bak",""],
+   ["Ekranlar için nötr görsel ve okul logosu (USB bellek)","bak","Tahta ve bilgisayar ekranlarında açılacak."],
+   ["Dünya küresi","bak","Okulda varsa gerekmez; müdüre sor."],
+   ["Futbol topu","bak","Halı saha ortasına konacak; okulda varsa gerekmez."],
+   ["Yedek, temiz Türk bayrağı","bak",""],
+   ["Yer işaretleme bandı","bak","Kamera yerlerini işaretlemek için."],
+   ["Temizlik bezi ve cam temizleyici","bak","Ekranlar, camlar, tahta."]]},
+ {g:"📑 Belgeler", kol:"S", liste:[
+   ["Görev yazısı ve çekim izinleri","bak",""],
+   ["Boş veli izin formları","bak","Okul toplayamadıysa sahada imzalatmak için."],
+   ["Seri numaralı ekipman listesi × 2","al","Havalimanı ve sınır geçişi için."],
+   ["Senaryo ve çekim listesi (basılı)","bak",""],
+   ["Çekim takip çizelgesi","bak","Kod, tekrar, saat, not."]]}
+];
+var DURUM = {var:["Var","d-var"], al:["🛒 Hazırlanacak","d-al"], bak:["🔎 Kontrol et","d-bak"], yok:["Götürülmüyor","d-yok"]};
+
+/* ---------- YARDIMCILAR ---------- */
+function oku(a){ try { return JSON.parse(localStorage.getItem(a) || '{}') || {}; } catch(e){ return {}; } }
+function yaz(a,v){ try { localStorage.setItem(a, JSON.stringify(v)); } catch(e){} }
+function $(s){ return document.querySelector(s); }
+function tur(k){ return k.charAt(0); }
+
+/* ---------- FİLM ---------- */
+$('#serit').innerHTML = BOLUMLER.map(function(b,i){
+  return '<button class="r'+i+'" style="flex:'+b.sure+'" data-b="'+i+'" title="'+b.ad+'">'+b.kisa+'</button>';
+}).join('');
+$('#bolumler').innerHTML = BOLUMLER.map(function(b,i){
+  return '<details id="b'+i+'"><summary><span class="renk r'+i+'"></span><span><span class="bas">'+b.ad+'</span> <span class="alt-bilgi">· '+b.planlar[0].p+(b.planlar.length>1?'–'+b.planlar[b.planlar.length-1].p:'')+' · '+b.sure+' sn</span></span>'+
+    '<span class="et '+(b.biz?'et-A':'et-gri')+'">'+(b.biz?'Biz çekiyoruz':'Çekim yok')+'</span></summary><div class="govde"><p>'+b.ozet+'</p>'+
+    b.planlar.map(function(p){
+      return '<div class="plan"><div class="plan-bas"><b>'+p.p+'</b><span class="alt-bilgi">'+p.s+' sn</span><span class="et et-gri">'+p.k+'</span></div><div class="ses">🔊 '+p.ses+'</div><div>👁️ '+p.g+'</div></div>';
+    }).join('')+'</div></details>';
+}).join('');
+$('#serit').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(!b) return;
+  var d = $('#b'+b.dataset.b); d.open = true; d.scrollIntoView({behavior:'smooth', block:'center'});
+});
+
+/* ---------- ÇEKİMLER ---------- */
+var bitti = oku('sam-ekip-cekim');
+$('#cekim-liste').innerHTML = CEKIMLER.map(function(c){
+  var t = tur(c.k), sinif = t==='Y'?'y':(t==='E'?'e':'');
+  return '<details data-k="'+c.k+'" data-o="'+c.o+'" data-t="'+t+'" data-g="'+c.g.join(',')+'">'+
+    '<summary><input class="tik" type="checkbox" aria-label="'+c.k+' çekildi"><span class="kod '+sinif+'">'+c.k+'</span><span><span class="bas">'+c.ad+'</span> <span class="alt-bilgi">· '+c.p+' · '+c.g.map(function(g){return g+'. gün';}).join(', ')+'</span></span><span class="et et-'+c.o+'">'+c.o+'</span></summary>'+
+    '<div class="govde"><dl>'+
+    '<dt>🎯 Ne</dt><dd>'+c.ne+'</dd>'+
+    '<dt>🎥 Nasıl</dt><dd>'+c.nasil+'</dd>'+
+    '<dt>☀️ Işık</dt><dd>'+c.isik+'</dd>'+
+    '<dt>🔁 Süre / tekrar</dt><dd>'+c.sure+'</dd>'+
+    '<dt>💡 Neden</dt><dd>'+c.neden+'</dd>'+
+    '<dt>⚠️ Dikkat</dt><dd>'+c.dikkat+'</dd>'+
+    '</dl></div></details>';
+}).join('');
+function sayacGuncelle(){
+  var n = 0;
+  document.querySelectorAll('#cekim-liste details').forEach(function(d){
+    var v = !!bitti[d.dataset.k]; d.classList.toggle('bitti', v); d.querySelector('.tik').checked = v; if(v) n++;
+  });
+  $('#sayac').textContent = n + ' / ' + CEKIMLER.length + ' çekildi';
+  $('#cubuk').style.width = (100*n/CEKIMLER.length) + '%';
+}
+$('#cekim-liste').addEventListener('click', function(e){
+  if(!e.target.classList.contains('tik')) return;
+  e.stopPropagation();
+  var k = e.target.closest('details').dataset.k;
+  bitti[k] = e.target.checked; yaz('sam-ekip-cekim', bitti);
+  setTimeout(sayacGuncelle, 0);
+});
+sayacGuncelle();
+$('#suzgec').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#suzgec button').forEach(function(x){ x.classList.toggle('secili', x===b); });
+  var s = b.dataset.s;
+  document.querySelectorAll('#cekim-liste details').forEach(function(d){
+    var goster = s==='hepsi' || (s==='A' && d.dataset.o==='A') || s===d.dataset.t || (s.charAt(0)==='g' && d.dataset.g.split(',').indexOf(s.charAt(1))>=0);
+    d.hidden = !goster;
+  });
+});
+
+/* ---------- EKİPMAN ---------- */
+var canta = oku('sam-ekip-canta');
+$('#esya-liste').innerHTML = ESYA.map(function(g, gi){
+  var say = g.liste.filter(function(e){ return e[1] !== 'yok'; }).length;
+  return '<details open data-kol="'+g.kol+'"><summary><span><span class="bas">'+g.g+'</span> <span class="alt-bilgi">· '+say+' kalem</span></span></summary><div class="govde">'+
+    g.liste.map(function(e, ei){
+      var id = 'e'+gi+'-'+ei, d = DURUM[e[1]];
+      return '<div class="esya" data-d="'+e[1]+'" data-id="'+id+'">'+(e[1]==='yok' ? '<span style="width:19px;flex:none;text-align:center">➖</span>' : '<input type="checkbox" id="'+id+'" aria-label="'+e[0].replace(/"/g,'')+'">')+
+        '<label for="'+id+'"><span class="ad">'+e[0]+'</span>'+(e[2] ? '<br><span class="not">'+e[2]+'</span>' : '')+'</label><span class="sag"><span class="et '+d[1]+'">'+d[0]+'</span></span></div>';
+    }).join('')+'</div></details>';
+}).join('');
+function cantaGuncelle(){
+  var kutular = document.querySelectorAll('#esya-liste input'), n = 0;
+  kutular.forEach(function(k){ var v = !!canta[k.id]; k.checked = v; k.closest('.esya').classList.toggle('tamam', v); if(v) n++; });
+  $('#esya-sayac').textContent = n + ' / ' + kutular.length + ' çantada';
+  $('#esya-cubuk').style.width = (kutular.length ? 100*n/kutular.length : 0) + '%';
+}
+$('#esya-liste').addEventListener('change', function(e){
+  if(e.target.type !== 'checkbox') return;
+  canta[e.target.id] = e.target.checked; yaz('sam-ekip-canta', canta); cantaGuncelle();
+});
+cantaGuncelle();
+$('#esya-suzgec').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#esya-suzgec button').forEach(function(x){ x.classList.toggle('secili', x===b); });
+  var s = b.dataset.s;
+  document.querySelectorAll('#esya-liste details').forEach(function(d){
+    var kolUyar = (s==='hepsi' || s==='al' || s==='bak') ? true : d.dataset.kol===s, gorunen = 0;
+    d.querySelectorAll('.esya').forEach(function(x){
+      var g = kolUyar && ((s==='al' || s==='bak') ? x.dataset.d===s : true);
+      x.hidden = !g; if(g) gorunen++;
+    });
+    d.hidden = gorunen === 0; if(gorunen) d.open = true;
+  });
+});
+
+/* ---------- GÜNLER ---------- */
+$('#gun-liste').innerHTML = GUNLER.map(function(g,i){
+  return '<details'+(i===0?' open':'')+' style="border-top:6px solid '+g.renk+'"><summary><span><span class="bas">'+g.ad+'</span><br><span class="alt-bilgi">'+g.tema+'</span></span></summary><div class="govde">'+
+    g.satir.map(function(s){ return '<div class="saat-satir"><div class="saat">'+s[0]+'</div><div>'+s[1]+'</div></div>'; }).join('')+'</div></details>';
+}).join('');
+
+/* ---------- KURALLAR ---------- */
+$('#kural-liste').innerHTML = KURALLAR.map(function(k){
+  return '<details><summary><span class="kural"><span class="sim">'+k[0]+'</span><span class="bas">'+k[1]+'</span></span></summary><div class="govde">'+k[2]+'</div></details>';
+}).join('');
+
+/* ---------- SEKMELER ---------- */
+function sekmeAc(ad){
+  if(!document.getElementById(ad)) ad = 'film';
+  document.querySelectorAll('section.panel').forEach(function(p){ p.classList.toggle('acik', p.id===ad); });
+  document.querySelectorAll('.sekmeler button').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.sekme===ad ? 'true':'false'); });
+  try { history.replaceState(null, '', '#'+ad); } catch(e){}
+  window.scrollTo(0, 0);
+}
+document.querySelector('.sekmeler').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if(b) sekmeAc(b.dataset.sekme);
+});
+sekmeAc((location.hash || '#film').slice(1));
+
+/* ---------- KONTROL LİSTELERİ ---------- */
+(function(){
+  var durum = oku('sam-ekip-liste');
+  document.querySelectorAll('.liste input[type=checkbox]').forEach(function(k,i){
+    if(durum[i]) k.checked = true;
+    k.addEventListener('change', function(){ durum[i] = k.checked; yaz('sam-ekip-liste', durum); });
+  });
+})();
+
+/* ---------- YAZDIRMA: her şeyi aç ---------- */
+window.addEventListener('beforeprint', function(){ document.querySelectorAll('details').forEach(function(d){ d.open = true; }); });
+</script>
+</body>
+</html>
