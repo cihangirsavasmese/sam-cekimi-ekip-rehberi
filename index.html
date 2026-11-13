@@ -98,10 +98,10 @@ details.bitti>summary .bas{text-decoration:line-through;color:var(--soluk)}
 .esya:first-child{border-top:0}
 .esya input{width:19px;height:19px;margin-top:3px;accent-color:var(--yesil);flex:none;cursor:pointer}
 .esya .ad{font-weight:700}
-.esya.tamam .ad{text-decoration:line-through;color:var(--soluk)}
+.esya.tamam .ad{color:var(--soluk)}
 .esya .not{color:var(--soluk);font-size:14px}
 .esya .sag{margin-left:auto;display:flex;gap:4px;flex:none;align-items:center}
-.d-var{background:var(--gri-z);color:var(--soluk)}.d-al{background:var(--kirmizi);color:#fff}.d-bak{background:var(--sari);color:#fff}.d-yok{background:none;border:1px dashed var(--gri-c);color:var(--soluk)}
+.d-ok{background:var(--yesil);color:#fff}#esya-kart.onayli{border-left:6px solid var(--yesil)}#esya-kart.onayli #esya-sayac{color:var(--yesil)}.d-var{background:var(--gri-z);color:var(--soluk)}.d-al{background:var(--kirmizi);color:#fff}.d-bak{background:var(--sari);color:#fff}
 .liste label{display:flex;gap:10px;align-items:flex-start;padding:7px 2px;border-bottom:1px dashed var(--cizgi);cursor:pointer}
 .liste label:last-child{border-bottom:0}
 .liste input{width:19px;height:19px;margin-top:2px;accent-color:var(--kirmizi);flex:none}
@@ -130,7 +130,7 @@ footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
   <h1>🎬 Şam Çekimi – Ekip Rehberi</h1>
   <p>Üç günlük çekimin yol haritası: film, çekimler, program ve kurallar. Ayrıntılar <b>＋</b> işaretli satırlarda.</p>
   <div class="rozetler">
-    <span class="rozet">🗓️ 17–18–19 Kasım 2026</span><span class="rozet">⏱️ Film 2 dk 20 sn · 19 plan</span><span class="rozet">🚁 Air 2S + Mini 4 Pro · 🎥 A7 IV + A7 III</span>
+    <span class="rozet">🗓️ 17–18–19 Kasım 2026</span><span class="rozet">⏱️ Film 2 dk 20 sn · 19 plan</span><span class="rozet">🚁 Air 2S + Mini 4 Pro · 🎥 A7 IV + 2 × A7 III</span>
   </div>
 </div></header>
 
@@ -260,18 +260,15 @@ footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
 
 <!-- ================= EKİPMAN ================= -->
 <section class="panel" id="ekipman">
-  <div class="kart uyari">
-    <p><b>🛒 Hazırlanacak:</b> seri numaralı ekipman listesi, iki kopya. Havalimanı ve sınır geçişi için.</p>
-  </div>
-  <div class="kart">
-    <b id="esya-sayac">0 / 0 çantada</b>
+  <div class="kart" id="esya-kart">
+    <b id="esya-sayac">0 / 0 kalem onaylandı</b>
     <div class="ilerleme"><div id="esya-cubuk"></div></div>
-    <span class="ipucu">Çantaya giren her şeyi işaretle. İşaretler yalnızca bu cihazda saklanır.</span>
+    <span class="ipucu" id="esya-ipucu"></span><br>
+    <span class="ipucu">İşaretler yalnızca bu cihazda saklanır.</span>
   </div>
   <div class="suzgec" id="esya-suzgec">
     <button data-s="hepsi" class="secili">Tümü</button>
-    <button data-s="al">🛒 Hazırlanacak</button>
-    <button data-s="bak">🔎 Kontrol et</button>
+    <button data-s="bekle">⏳ Onay bekleyen</button>
     <button data-s="D">🚁 Drone</button>
     <button data-s="K">🎥 Kamera</button>
     <button data-s="S">🎙️ Ses ve saha</button>
@@ -281,7 +278,7 @@ footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
   <details>
     <summary><span class="bas">📷 Hangi kamera, hangi lens, hangi çekim?</span></summary>
     <div class="govde">
-      <p><b>A7 IV</b> ana kamera, çoğunlukla gimbalde: 4K 50p, Super 35 kırpmalı (1,5×), 10-bit, S-Log3. <b>A7 III</b> tripodda: 4K 25p, tam kare, 8-bit, S-Log2.</p>
+      <p><b>A7 IV</b> ana kamera, çoğunlukla gimbalde: 4K 50p, Super 35 kırpmalı (1,5×), 10-bit, S-Log3. <b>A7 III</b> (iki gövde): 4K 25p, tam kare, 8-bit, S-Log2. Biri tripodda; diğeri öğrencili sahnelerde ikinci açı ve yedek.</p>
       <p class="ipucu">Kırpma yüzünden A7 IV'te lensler 1,5 kat dar görür: 16-35 mm, 24-52 mm gibi davranır. Geniş açı gereken yerde 12-24 GM kullanılır.</p>
       <table>
         <tr><th>12-24 GM</th><td>A7 IV'te geniş açı: Y02 koridor, Y03 derslik, Y09 kapı, Y10 monopod hareketi. Önüne filtre takılmıyor; iç mekân lensi.</td></tr>
@@ -393,7 +390,7 @@ footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
   </div>
 </section>
 
-<footer>v005 · 13 Kasım 2026 · Dayanak: Senaryo v009 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
+<footer>v006 · 13 Kasım 2026 · Dayanak: Senaryo v009 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
 </div>
 
 <script>
@@ -506,67 +503,60 @@ var ESYA = [
  {g:"🚁 Drone", kol:"D", liste:[
    ["DJI Air 2S ve kumanda (ana drone)","var","Gündüz çekimlerinin çoğu bununla. Yazılımı gitmeden güncelle."],
    ["Air 2S ND filtre seti","var",""],
-   ["Air 2S pilleri ve şarj cihazı","bak","Kaç pil var? Altın saate en az 3 dolu pil gerekir."],
+   ["Air 2S: 3 pil ve şarj cihazı","var",""],
    ["DJI Mini 4 Pro ve kumanda","var","D03'ün alçak başlangıcı, mavi saatte waypoint tekrarları, dikey çekimler."],
    ["Mini 4 Pro: 3 pil ve çoklu şarj istasyonu","var",""],
-   ["microSD kart × 4 (128 GB, V30 ve üzeri)","bak","Her drone için iki kart."],
-   ["Yedek pervaneler (iki model için) ve tornavida","bak",""],
-   ["İki drone'un kayıt ve uçuş izin belgeleri","bak","İkisi de izin yazısında ve ekipman listesinde geçmeli."]]},
+   ["microSD kart × 3 (yüksek hızlı)","var","Air 2S, Mini 4 Pro ve Osmo Pocket 3'e birer kart; yedek kart yok. Her akşam diske aktar; kart dolarsa silmeden önce aktarımı doğrula."],
+   ["Yedek pervaneler (iki model için) ve tornavida","var",""],
+   ["İki drone'un kayıt ve uçuş izin belgeleri","var","İkisi de izin yazısında ve ekipman listesinde geçmeli."]]},
  {g:"🎥 Kameralar", kol:"K", liste:[
    ["Sony A7 IV (ana kamera)","var","4K 50p, Super 35 kırpmalı, 10-bit, S-Log3."],
-   ["Sony A7 III (tripod kamerası)","var","4K 25p, tam kare, 8-bit, S-Log2."],
-   ["NP-FZ100 pil × 6 ve şarj cihazları","var","İki gövde aynı pili kullanıyor."],
-   ["Hızlı SD kartlar (V60 / V90)","var","A7 IV'te iki karta aynı anda kayıt aç."],
-   ["Sensör ve lens temizlik seti","bak","Körük, bez, sıvı."],
-   ["İki kamera ve drone'da saat ve tarih eşit","bak","Kurguda dosyaları eşleştirmek için."]]},
+   ["Sony A7 III × 2","var","4K 25p, tam kare, 8-bit, S-Log2. Biri tripod kamerası; diğeri öğrencili sahnelerde ikinci açı ve yedek gövde."],
+   ["NP-FZ100 pil × 8 ve şarj cihazları","var","Üç gövde aynı pili kullanıyor."],
+   ["Hızlı SD kart × 3","var","Her gövdeye bir kart; yedek kart yok. Her akşam diske aktar; kart dolarsa silmeden önce aktarımı doğrula."],
+   ["DJI Osmo Pocket 3 Creator Combo","var","Kamera arkası görüntüleri için."],
+   ["Sensör ve lens temizlik seti","var","Körük, bez, sıvı."],
+   ["Kameralarda ve drone'larda saat ve tarih eşit","bak","Kurguda dosyaları eşleştirmek için. Yola çıkmadan altı cihazda da ayarla."]]},
  {g:"🔭 Lensler ve filtreler", kol:"K", liste:[
    ["Sony 12-24 GM","var","A7 IV'te geniş açı: koridor, derslik, Y09, Y10."],
    ["Sony 16-35 GM","var","Gimbalde genel lens."],
    ["Sony 24-70 GM","var","İç mekân orta planlar."],
    ["Sony 70-200 GM ve tripod yakası","var","Şam silueti, büst, bayrak."],
    ["Sony 85 GM","var","Flu arka planlı detaylar."],
-   ["Sabit ND seti (82 mm ve 77 mm)","bak","16-35 ve 24-70 GM 82 mm; 70-200 ve 85 GM 77 mm. Çaplar uyuyor mu?"]]},
+   ["ND ve polarize filtreler (82 mm ve 77 mm)","bak","Çantaya girdi mi? 16-35 ve 24-70 GM 82 mm; 70-200 ve 85 GM 77 mm. Dış çekimde 1/100 sn için ND şart."]]},
  {g:"🎛️ Gimbal ve destek", kol:"K", liste:[
    ["DJI RS gimbal, pil sapı, plakalar","var","Dengeyi 12-24 GM ile gitmeden bir kez kur."],
-   ["Ronin uygulaması telefonda kurulu","bak","Y10'da gimbalin eğimini ikinci kişi telefondan çevirecek."],
+   ["Ronin uygulaması telefonda kurulu","var","Y10'da gimbalin eğimini ikinci kişi telefondan çevirecek."],
    ["Video tripodu (akışkan başlıklı)","var","Tele çekimler ve detaylar."],
    ["İkinci tripod","var","Zaman atlaması ve Y10 güvenlik planları."],
    ["Monopod (1,5–2 m)","var","Y10 hareketi için."],
-   ["Monopod–gimbal bağlantısı","bak","Vida ölçüsü (1/4 – 3/8 inç) uyuyor mu? Adaptör gerekebilir."]]},
+   ["Monopod–gimbal bağlantısı","var",""]]},
  {g:"🎙️ Ses", kol:"S", liste:[
-   ["Saha ses kaydedici, pilleri ve kartı","var",""],
+   ["Zoom H6 ses kaydedici ve pilleri","var",""],
+   ["Zoom H6 için SD kart","bak","Kart var mı, çalışıyor mu? Kaydediciye takıp bir deneme kaydı al."],
    ["Shotgun mikrofon ve kablosu","var",""],
-   ["Tüylü rüzgârlık","bak","Dışarıda bayrak ve şehir sesi rüzgârlık olmadan alınmaz."],
-   ["Kapalı kulaklık","bak","Kaydı sahada dinlemeden geçme."]]},
+   ["Tüylü rüzgârlık","var","Dışarıda bayrak ve şehir sesi rüzgârlık olmadan alınmaz."],
+   ["Kapalı kulaklık","var","Kaydı sahada dinlemeden geçme."]]},
  {g:"💡 Işık", kol:"K", liste:[
-   ["Zhiyun Molus 100 × 1","var","Yedek: Y09 kapısı ve karanlık kalan iç mekânlar. Film doğal ışıkla çekiliyor."],
-   ["Molus 100 için güç (pil sapı ya da adaptör) ve ışık ayağı","bak","Okulda elektrik kesilirse pille çalışabilmeli."],
-   ["Küçük cep LED'i","var","Detay planlarında hafif dolgu."],
-   ["Katlanır reflektör","bak","Pencere ışığını yönlendirmek için; hafif ve çok işe yarar."]]},
+   ["Zhiyun Molus 100 × 2 ve birer bataryası","var","Yedek: Y09 kapısı ve karanlık kalan iç mekânlar. Film doğal ışıkla çekiliyor."],
+   ["Işık ayakları ve Type-C besleme kabloları","var","Işıklar powerbank'ten de beslenir."]]},
  {g:"💾 Yedekleme ve güç", kol:"S", liste:[
-   ["Dizüstü bilgisayar ve şarjı","var",""],
-   ["Harici disk","var","Üç günde tahminen 300–500 GB çıkar; boş alan en az 1 TB olsun."],
-   ["Kart okuyucu (SD ve microSD)","bak",""],
-   ["Çoklu priz ve uzatma kablosu","bak","Şarj istasyonu kurmak için."],
-   ["Powerbank (65 W ve üzeri, 100 Wh altı)","bak","Sahada drone pili ve telefon şarjı."],
-   ["Evrensel priz adaptörü","bak","Türkiye fişleri çoğunlukla uyar; yedekte dursun."]]},
+   ["MacBook Pro ve şarjı","var",""],
+   ["8 TB harici SSD","var","Üç günde tahminen 300–500 GB çıkar."],
+   ["Kart okuyucu (SD ve microSD)","var",""],
+   ["Anker 20.000 mAh powerbank × 2","var","Sahada ışık, drone pili ve telefon şarjı. Kabin bagajında taşınır."]]},
  {g:"🎬 Sahne malzemesi", kol:"S", liste:[
    ["Çizgili, markasız temiz defter × 3","bak","\"Yarın\" yazısı için; her tekrarda yeni sayfa."],
    ["Kurşun kalemler ve kalemtıraş","bak",""],
-   ["Ekranlar için nötr görsel ve okul logosu (USB bellek)","bak","Tahta ve bilgisayar ekranlarında açılacak."],
-   ["Dünya küresi","bak","Okulda varsa gerekmez; müdüre sor."],
-   ["Futbol topu","bak","Halı saha ortasına konacak; okulda varsa gerekmez."],
-   ["Yedek, temiz Türk bayrağı","bak",""],
-   ["Yer işaretleme bandı","bak","Kamera yerlerini işaretlemek için."],
-   ["Temizlik bezi ve cam temizleyici","bak","Ekranlar, camlar, tahta."]]},
+   ["Yer işaretleme bandı","var","Kamera yerlerini işaretlemek için."],
+   ["Temizlik bezi ve cam temizleyici","var","Ekranlar, camlar, tahta."]]},
  {g:"📑 Belgeler", kol:"S", liste:[
-   ["Görev yazısı ve çekim izinleri","bak",""],
-   ["Boş veli izin formları","bak","Okul toplayamadıysa sahada imzalatmak için."],
-   ["Seri numaralı ekipman listesi × 2","al","Havalimanı ve sınır geçişi için."],
-   ["Senaryo ve çekim listesi (basılı)","bak",""],
-   ["Çekim takip çizelgesi","bak","Kod, tekrar, saat, not."]]}
+   ["Görev yazısı ve çekim izinleri","var",""],
+   ["Boş muvafakatname formları","var","Okul toplayamadıysa sahada imzalatmak için."],
+   ["Seri numaralı ekipman listesi × 2","var","Havalimanı ve sınır geçişi için."],
+   ["Basılı senaryo, çekim listesi ve takip çizelgesi","al","Çizelge sütunları: kod, tekrar, saat, not."]]}
 ];
-var DURUM = {var:["Var","d-var"], al:["🛒 Hazırlanacak","d-al"], bak:["🔎 Kontrol et","d-bak"], yok:["Götürülmüyor","d-yok"]};
+var DURUM = {var:["Geliyor","d-var"], al:["🛒 Hazırlanacak","d-al"], bak:["🔎 Kontrol et","d-bak"]};
 
 /* ---------- YARDIMCILAR ---------- */
 function oku(a){ try { return JSON.parse(localStorage.getItem(a) || '{}') || {}; } catch(e){ return {}; } }
@@ -632,25 +622,40 @@ $('#suzgec').addEventListener('click', function(e){
 });
 
 /* ---------- EKİPMAN ---------- */
-var canta = oku('sam-ekip-canta');
+var CANTA_ANAHTAR = 'sam-ekip-canta-v6', ONAY_ANAHTAR = 'sam-ekip-onay-v6';
+var canta = oku(CANTA_ANAHTAR);
 $('#esya-liste').innerHTML = ESYA.map(function(g, gi){
-  var say = g.liste.filter(function(e){ return e[1] !== 'yok'; }).length;
-  return '<details open data-kol="'+g.kol+'"><summary><span><span class="bas">'+g.g+'</span> <span class="alt-bilgi">· '+say+' kalem</span></span></summary><div class="govde">'+
+  return '<details open data-kol="'+g.kol+'"><summary><span><span class="bas">'+g.g+'</span> <span class="alt-bilgi"></span></span></summary><div class="govde">'+
     g.liste.map(function(e, ei){
-      var id = 'e'+gi+'-'+ei, d = DURUM[e[1]];
-      return '<div class="esya" data-d="'+e[1]+'" data-id="'+id+'">'+(e[1]==='yok' ? '<span style="width:19px;flex:none;text-align:center">➖</span>' : '<input type="checkbox" id="'+id+'" aria-label="'+e[0].replace(/"/g,'')+'">')+
-        '<label for="'+id+'"><span class="ad">'+e[0]+'</span>'+(e[2] ? '<br><span class="not">'+e[2]+'</span>' : '')+'</label><span class="sag"><span class="et '+d[1]+'">'+d[0]+'</span></span></div>';
+      var id = 'e'+gi+'-'+ei;
+      return '<div class="esya" data-d="'+e[1]+'" data-id="'+id+'"><input type="checkbox" id="'+id+'" aria-label="'+e[0].replace(/"/g,'')+'">'+
+        '<label for="'+id+'"><span class="ad">'+e[0]+'</span>'+(e[2] ? '<br><span class="not">'+e[2]+'</span>' : '')+'</label><span class="sag"><span class="et"></span></span></div>';
     }).join('')+'</div></details>';
 }).join('');
 function cantaGuncelle(){
-  var kutular = document.querySelectorAll('#esya-liste input'), n = 0;
-  kutular.forEach(function(k){ var v = !!canta[k.id]; k.checked = v; k.closest('.esya').classList.toggle('tamam', v); if(v) n++; });
-  $('#esya-sayac').textContent = n + ' / ' + kutular.length + ' çantada';
+  var kutular = document.querySelectorAll('#esya-liste input'), n = 0, bekleyen = [];
+  kutular.forEach(function(k){
+    var v = !!canta[k.id], satir = k.closest('.esya'), et = satir.querySelector('.et'), d = DURUM[satir.dataset.d];
+    k.checked = v; satir.classList.toggle('tamam', v);
+    et.className = 'et ' + (v ? 'd-ok' : d[1]); et.textContent = v ? '✅ Onaylandı' : d[0];
+    if(v) n++; else if(satir.dataset.d !== 'var') bekleyen.push(satir.querySelector('.ad').textContent);
+  });
+  document.querySelectorAll('#esya-liste details').forEach(function(d){
+    var hepsi = d.querySelectorAll('input').length, tamam = d.querySelectorAll('input:checked').length;
+    d.querySelector('.alt-bilgi').textContent = (tamam === hepsi ? '· ✅ ' : '· ') + tamam + ' / ' + hepsi;
+  });
+  var bitti = kutular.length > 0 && n === kutular.length, onay = oku(ONAY_ANAHTAR);
+  if(bitti && !onay.t){ onay = {t: new Date().toLocaleString('tr-TR', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'})}; yaz(ONAY_ANAHTAR, onay); }
+  if(!bitti && onay.t){ onay = {}; yaz(ONAY_ANAHTAR, onay); }
+  $('#esya-kart').classList.toggle('onayli', bitti);
+  $('#esya-sayac').textContent = bitti ? '✅ Ekipman listesi onaylandı · ' + n + ' / ' + kutular.length : n + ' / ' + kutular.length + ' kalem onaylandı';
   $('#esya-cubuk').style.width = (kutular.length ? 100*n/kutular.length : 0) + '%';
+  $('#esya-ipucu').textContent = bitti ? 'Bütün kalemler işaretlendi' + (onay.t ? ' (' + onay.t + ')' : '') + '. Bir işareti kaldırırsan onay geri alınır.'
+    : (bekleyen.length ? 'Önce bakılacaklar: ' + bekleyen.join(' · ') + '.' : 'Hazır olan her kalemi işaretle; hepsi işaretlenince liste onaylanır.');
 }
 $('#esya-liste').addEventListener('change', function(e){
   if(e.target.type !== 'checkbox') return;
-  canta[e.target.id] = e.target.checked; yaz('sam-ekip-canta', canta); cantaGuncelle();
+  canta[e.target.id] = e.target.checked; yaz(CANTA_ANAHTAR, canta); cantaGuncelle();
 });
 cantaGuncelle();
 $('#esya-suzgec').addEventListener('click', function(e){
@@ -658,9 +663,9 @@ $('#esya-suzgec').addEventListener('click', function(e){
   document.querySelectorAll('#esya-suzgec button').forEach(function(x){ x.classList.toggle('secili', x===b); });
   var s = b.dataset.s;
   document.querySelectorAll('#esya-liste details').forEach(function(d){
-    var kolUyar = (s==='hepsi' || s==='al' || s==='bak') ? true : d.dataset.kol===s, gorunen = 0;
+    var kolUyar = (s==='hepsi' || s==='bekle') ? true : d.dataset.kol===s, gorunen = 0;
     d.querySelectorAll('.esya').forEach(function(x){
-      var g = kolUyar && ((s==='al' || s==='bak') ? x.dataset.d===s : true);
+      var g = kolUyar && (s==='bekle' ? !x.querySelector('input').checked : true);
       x.hidden = !g; if(g) gorunen++;
     });
     d.hidden = gorunen === 0; if(gorunen) d.open = true;
