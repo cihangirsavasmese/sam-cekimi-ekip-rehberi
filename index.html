@@ -153,6 +153,11 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
 .tk-dugmeler{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .tk-dugmeler button{border:0;border-radius:999px;background:var(--lacivert);color:#fff;font:inherit;font-weight:700;font-size:14px;padding:9px 14px;cursor:pointer}
 #tk-mesaj{color:var(--yesil);font-weight:700;font-size:14px}
+.tk-esit{font-size:14px;font-weight:700;margin:8px 0 0;color:var(--soluk)}
+.tk-esit.tamam{color:var(--yesil)}.tk-esit.bekliyor{color:var(--sari)}
+.tk-kisi{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;font-weight:700}
+.tk-kisi[hidden]{display:none}
+.tk-kisi input{flex:1;min-width:0;font:inherit;font-weight:400;font-size:15px;padding:7px 10px;border:1px solid var(--cizgi);border-radius:8px;background:var(--kart2);color:var(--yazi)}
 @media (max-width:560px){h1{font-size:23px}dl{grid-template-columns:1fr}dt{margin-top:4px}.saat-satir{grid-template-columns:1fr;gap:0}.eslesme{grid-template-columns:1fr}.eslesme span{text-align:center}}
 @media print{.sekmeler,.suzgec{display:none}section.panel{display:block;padding-bottom:10px}body{background:#fff}details{break-inside:avoid}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
@@ -267,7 +272,7 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
   <div class="kart">
     <b id="sayac">0 / 0 çekildi</b>
     <div class="ilerleme"><div id="cubuk"></div></div>
-    <span class="ipucu">Biten çekimin kutusunu işaretle. Tekrarları, saatleri ve notları <b>📋 Takip</b> sekmesinde tut; iki sekme birbirine bağlı. İşaretler yalnızca bu cihazda saklanır.</span>
+    <span class="ipucu">Biten çekimin kutusunu işaretle. Tekrarları, saatleri ve notları <b>📋 Takip</b> sekmesinde tut; iki sekme aynı kayda bağlı.</span>
   </div>
   <div class="suzgec" id="suzgec">
     <button data-s="hepsi" class="secili">Tümü</button>
@@ -289,7 +294,9 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
     <div class="ilerleme"><div id="tk-cubuk"></div></div>
     <div class="tk-ozet" id="tk-ozet"></div>
     <p class="ipucu" style="margin:6px 0 0">Her tekrar bitince <b>＋ Tekrar</b>'a bas: saat ve sıradaki dosya adı kendiliğinden yazılır. İyi tekrara dokunup ⭐ ver. Çekim bitince durumunu <b>✅ Tamam</b> yap. Saatler akşam dosyaları adlandırırken kartlardaki kayıtlarla eşleştirmeye yarar.</p>
-    <p class="ipucu" style="margin:6px 0 0">Takibi sahada <b>tek kişi</b> tutar. Kayıtlar yalnızca bu cihazda saklanır; her akşam <b>Durumu paylaş</b> ile ekip grubuna gönder.</p>
+    <p class="ipucu" style="margin:6px 0 0" id="tk-kayit-bilgi">Takibi sahada <b>tek kişi</b> tutar. Kayıtlar yalnızca bu cihazda saklanır; her akşam <b>Durumu paylaş</b> ile ekip grubuna gönder.</p>
+    <div id="tk-esit" class="tk-esit" role="status"></div>
+    <label class="tk-kisi" hidden>👤 Adın <input id="tk-kisi" type="text" maxlength="40" autocomplete="given-name" placeholder="Kayıtlarda kimin girdiği görünür"></label>
     <div class="tk-dugmeler"><button type="button" id="tk-paylas">📤 Durumu paylaş</button><button type="button" id="tk-csv">📄 Kurgu listesi (CSV)</button></div>
     <div id="tk-mesaj" role="status"></div>
     <textarea id="tk-cikti" rows="8" hidden aria-label="Paylaşılacak metin"></textarea>
@@ -457,7 +464,7 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
   </div>
 </section>
 
-<footer>v008 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
+<footer>v009 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
 </div>
 
 <script>
@@ -631,17 +638,92 @@ function yaz(a,v){ try { localStorage.setItem(a, JSON.stringify(v)); } catch(e){
 function $(s){ return document.querySelector(s); }
 function tur(k){ return k.charAt(0); }
 
-/* ---------- TAKİP VERİSİ (Çekimler ve Takip sekmeleri ortak kullanır) ---------- */
-var TK_ANAHTAR = 'sam-ekip-takip';
-var takip = oku(TK_ANAHTAR);
-(function(){ // v007'deki tek kutulu işaretleri bir kez taşı
-  var eski = oku('sam-ekip-cekim'), var_ = false;
-  Object.keys(eski).forEach(function(k){ if(eski[k] && !takip[k]){ takip[k] = {d:'tamam', t:[], n:''}; var_ = true; } });
-  if(var_) yaz(TK_ANAHTAR, takip);
-  try { localStorage.removeItem('sam-ekip-cekim'); } catch(e){}
-})();
-function kayit(k){ return takip[k] || (takip[k] = {d:'yok', t:[], n:''}); }
+/* ---------- TAKİP VERİSİ (Çekimler ve Takip sekmeleri ortak kullanır) ----------
+   Her dokunuş bir "olay" olarak kaydedilir: tekrar, sil, iyi, durum, not, sifirla.
+   Güncel durum, olaylar baştan sona okunarak kurulur (kur).
+   TAKIP_URL doluysa olaylar Drive'daki ortak tabloya (Apps Script web uygulaması) gider
+   ve linki açan herkes aynı kaydı görür; boşsa kayıt yalnızca bu cihazda kalır. */
+var TAKIP_URL = 'https://script.google.com/macros/s/AKfycbyhayoGzsyq4YHDixUWEy2tU_uOYxJ7hwhqUnyuSmRZhkPCinMss550tQwyfAbuyfM2eQ/exec';
+var ORTAK = !!TAKIP_URL && location.protocol.indexOf('http') === 0 && !window.claude;
+var OLAY_A = ORTAK ? 'sam-ekip-ortak-olaylar' : 'sam-ekip-olaylar', KUYRUK_A = 'sam-ekip-ortak-kuyruk', KISI_A = 'sam-ekip-kisi';
+var DURUMLAR = {yok:'⬜ Çekilmedi', eksik:'🔁 Eksik', tamam:'✅ Tamam', dus:'⛔ Düştü'};
+function okuDizi(a){ try { var x = JSON.parse(localStorage.getItem(a) || '[]'); return Array.isArray(x) ? x : []; } catch(e){ return []; } }
+function yazDizi(a,v){ try { localStorage.setItem(a, JSON.stringify(v)); } catch(e){} }
+var olaylar = okuDizi(OLAY_A), kuyruk = ORTAK ? okuDizi(KUYRUK_A) : [];
+function kur(liste){
+  var s = {};
+  liste.forEach(function(e){
+    if(e.o === 'sifirla'){ s = {}; return; }
+    var r = s[e.k] || (s[e.k] = {d:'yok', t:[], n:''}), v = e.v;
+    if(e.o === 'tekrar'){ r.t.push({id:e.i, s:(v && v.s) || '', t:(v && v.t) || '', c:e.c || ''}); if(r.d === 'yok') r.d = 'eksik'; }
+    else if(e.o === 'sil'){ r.t = r.t.filter(function(x){ return x.id !== v; }); if(!r.t.length && r.d === 'eksik') r.d = 'yok'; }
+    else if(e.o === 'iyi'){ r.t.forEach(function(x){ if(v && x.id === v.id){ if(v.y) x.y = 1; else delete x.y; } }); }
+    else if(e.o === 'durum'){ if(DURUMLAR[v]) r.d = v; }
+    else if(e.o === 'not'){ r.n = String(v == null ? '' : v); }
+  });
+  return s;
+}
+var takip = kur(olaylar.concat(kuyruk)), takipHazir = false, notZaman = {};
 function durumu(k){ return takip[k] ? takip[k].d : 'yok'; }
+function rid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+function kisiAdi(){ try { return localStorage.getItem(KISI_A) || ''; } catch(e){ return ''; } }
+function olay(k, o, v, aciklama){
+  var e = {i:rid(), z:new Date().toISOString(), c:kisiAdi(), k:k, o:o, v:v, a:aciklama || ''};
+  if(ORTAK){ kuyruk.push(e); yazDizi(KUYRUK_A, kuyruk); } else { olaylar.push(e); yazDizi(OLAY_A, olaylar); }
+  yenile();
+  if(ORTAK) gonder();
+}
+function yenile(){
+  takip = kur(olaylar.concat(kuyruk));
+  if(!takipHazir) return;
+  CEKIMLER.forEach(function(c){ takipCiz(c.k); }); takipOzet(); sayacGuncelle(); esitDurum();
+}
+
+/* Drive ile eşitleme */
+var gonderiliyor = false, cekiliyor = false, esitHata = false, sonEsit = null;
+function al(c){
+  if(!c || !c.ok || !Array.isArray(c.olaylar)) throw new Error('cevap');
+  var bas = Number(c.baslangic) || 0;
+  if(bas > 0 && c.toplam < olaylar.length) return; // eski bir cevap; yoksay
+  var once = olaylar.length;
+  olaylar = olaylar.slice(0, bas).concat(c.olaylar);
+  var bilinen = {}; olaylar.forEach(function(e){ bilinen[e.i] = 1; });
+  var kalan = kuyruk.filter(function(e){ return !bilinen[e.i]; });
+  var degisti = olaylar.length !== once || bas < once || kalan.length !== kuyruk.length;
+  kuyruk = kalan; yazDizi(OLAY_A, olaylar); yazDizi(KUYRUK_A, kuyruk);
+  sonEsit = new Date(); esitHata = false;
+  if(degisti) yenile();
+}
+function gonder(){
+  if(!ORTAK || gonderiliyor || !kuyruk.length) return;
+  gonderiliyor = true;
+  var paket = kuyruk.slice(0, 100);
+  fetch(TAKIP_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({olaylar:paket, n:olaylar.length})})
+    .then(function(r){ return r.json(); }).then(al)
+    .catch(function(){ esitHata = true; })
+    .then(function(){ gonderiliyor = false; esitDurum(); if(kuyruk.length && !esitHata) setTimeout(gonder, 500); });
+}
+function cek(){
+  if(!ORTAK || cekiliyor) return;
+  cekiliyor = true;
+  fetch(TAKIP_URL + '?n=' + olaylar.length, {cache:'no-store'})
+    .then(function(r){ return r.json(); }).then(al)
+    .catch(function(){ esitHata = true; })
+    .then(function(){ cekiliyor = false; esitDurum(); });
+}
+function esitDurum(){
+  var el = document.getElementById('tk-esit'); if(!el) return;
+  var saat = sonEsit ? sonEsit.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) : '';
+  if(!ORTAK){ el.textContent = TAKIP_URL ? '📱 Ortak kayıt GitHub linkinde çalışır; bu sayfada kayıtlar yalnızca bu cihazda.' : '📱 Kayıtlar yalnızca bu cihazda.'; el.className = 'tk-esit'; return; }
+  if(kuyruk.length){ el.textContent = '🟡 ' + kuyruk.length + ' kayıt gönderilmeyi bekliyor' + (esitHata ? '. İnternet yok; bağlanınca kendiliğinden gider.' : '…'); el.className = 'tk-esit bekliyor'; }
+  else if(esitHata){ el.textContent = '🟠 Drive\'a ulaşılamadı' + (saat ? '; son eşitleme ' + saat : '') + '. Kayıtlar telefonda güvende.'; el.className = 'tk-esit bekliyor'; }
+  else { el.textContent = sonEsit ? '🟢 Drive\'daki ortak kayıtla eşit · ' + saat : '⏳ Drive\'dan kayıtlar alınıyor…'; el.className = 'tk-esit tamam'; }
+}
+if(ORTAK){
+  setInterval(function(){ if(document.visibilityState === 'visible'){ cek(); gonder(); } }, 15000);
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible'){ cek(); gonder(); } });
+  window.addEventListener('online', function(){ gonder(); cek(); });
+}
 
 /* ---------- FİLM ---------- */
 $('#serit').innerHTML = BOLUMLER.map(function(b,i){
@@ -684,10 +766,8 @@ function sayacGuncelle(){
 $('#cekim-liste').addEventListener('click', function(e){
   if(!e.target.classList.contains('tik')) return;
   e.stopPropagation();
-  var k = e.target.closest('details').dataset.k, r = kayit(k);
-  r.d = e.target.checked ? 'tamam' : (r.t.length ? 'eksik' : 'yok');
-  yaz(TK_ANAHTAR, takip);
-  setTimeout(function(){ sayacGuncelle(); takipCiz(k); takipOzet(); }, 0);
+  var k = e.target.closest('details').dataset.k, r = takip[k], d = e.target.checked ? 'tamam' : (r && r.t.length ? 'eksik' : 'yok');
+  setTimeout(function(){ olay(k, 'durum', d, k + ' → ' + DURUMLAR[d]); }, 0);
 });
 sayacGuncelle();
 $('#suzgec').addEventListener('click', function(e){
@@ -701,7 +781,6 @@ $('#suzgec').addEventListener('click', function(e){
 });
 
 /* ---------- TAKİP ---------- */
-var DURUMLAR = {yok:'⬜ Çekilmedi', eksik:'🔁 Eksik', tamam:'✅ Tamam', dus:'⛔ Düştü'};
 var GUN_TARIH = {'20261117':1, '20261118':2, '20261119':3};
 function iki(n){ return ('0'+n).slice(-2); }
 function tarihKod(d){ return d.getFullYear() + iki(d.getMonth()+1) + iki(d.getDate()); }
@@ -737,11 +816,11 @@ function takipCiz(k){
   d.querySelector('.tk-cipler').innerHTML = r.t.length
     ? r.t.map(function(x,i){
         var gun = x.t===bugun ? '' : (GUN_TARIH[x.t] ? GUN_TARIH[x.t]+'. gün ' : x.t.slice(6)+'.'+x.t.slice(4,6)+' ');
-        return '<button type="button" class="tk-cip'+(x.y?' iyi':'')+'" data-i="'+i+'" aria-pressed="'+(x.y?'true':'false')+'" title="İyi tekrar olarak işaretle">'+(x.y?'⭐ ':'')+tAdi(i)+' · '+gun+x.s+'</button>';
+        return '<button type="button" class="tk-cip'+(x.y?' iyi':'')+'" data-i="'+i+'" aria-pressed="'+(x.y?'true':'false')+'" title="İyi tekrar olarak işaretle'+(x.c?' · kaydeden: '+x.c.replace(/[<>"&]/g,''):'')+'">'+(x.y?'⭐ ':'')+tAdi(i)+' · '+gun+x.s+'</button>';
       }).join('') + '<button type="button" class="tk-kucuk tk-geri">↶ Son tekrarı sil</button>'
     : '<span class="alt-bilgi">Henüz tekrar yok. Her tekrar bitince ＋ Tekrar\'a bas.</span>';
   d.querySelector('.tk-dosya').innerHTML = 'Sıradaki dosya: <code>'+k+'_'+tAdi(r.t.length)+'_'+bugun+'</code>';
-  var not = d.querySelector('.tk-not'); if(document.activeElement !== not) not.value = r.n || '';
+  var not = d.querySelector('.tk-not'); if(document.activeElement !== not && !notZaman[k]) not.value = r.n || '';
 }
 function takipOzet(){
   var say = {yok:0, eksik:0, tamam:0, dus:0}, aT = 0, aH = 0, tekrar = 0;
@@ -755,37 +834,45 @@ function takipOzet(){
     '<span class="et d-bak">🔁 '+say.eksik+' eksik</span><span class="et et-gri">⬜ '+say.yok+' çekilmedi</span>'+
     (say.dus ? '<span class="et et-gri">⛔ '+say.dus+' düştü</span>' : '')+'<span class="et et-gri">🎞️ '+tekrar+' tekrar</span>';
 }
-function takipKaydet(k){ yaz(TK_ANAHTAR, takip); takipCiz(k); takipOzet(); sayacGuncelle(); }
-
 $('#tk-liste').addEventListener('click', function(e){
   var d = e.target.closest('details.tk'); if(!d) return;
-  var k = d.dataset.k, r, b;
+  var k = d.dataset.k, r = takip[k] || {d:'yok', t:[], n:''}, b;
   if((b = e.target.closest('.tk-arti'))){
     e.preventDefault(); // kartı açıp kapatmasın
-    var s = new Date(); r = kayit(k);
-    r.t.push({s: iki(s.getHours())+':'+iki(s.getMinutes()), t: tarihKod(s)});
-    if(r.d==='yok') r.d = 'eksik';
-    takipKaydet(k);
-    clearTimeout(b._z); b.textContent = '✓ ' + tAdi(r.t.length-1);
+    var s = new Date(), saat = iki(s.getHours())+':'+iki(s.getMinutes()), no = tAdi(r.t.length);
+    olay(k, 'tekrar', {s:saat, t:tarihKod(s)}, k + ' ' + no + ' · ' + saat);
+    clearTimeout(b._z); b.textContent = '✓ ' + no;
     b._z = setTimeout(function(){ b.textContent = '＋ Tekrar'; }, 1400);
     return;
   }
-  if((b = e.target.closest('.tk-segment button'))){ kayit(k).d = b.dataset.d; takipKaydet(k); return; }
+  if((b = e.target.closest('.tk-segment button'))){
+    if(b.dataset.d !== r.d) olay(k, 'durum', b.dataset.d, k + ' → ' + DURUMLAR[b.dataset.d]);
+    return;
+  }
   if((b = e.target.closest('.tk-cip'))){
-    var x = kayit(k).t[+b.dataset.i]; if(x.y) delete x.y; else x.y = 1;
-    takipKaydet(k); return;
+    var i = +b.dataset.i, x = r.t[i]; if(!x) return;
+    olay(k, 'iyi', {id:x.id, y:!x.y}, k + ' ' + tAdi(i) + (x.y ? ' ⭐ kaldırıldı' : ' ⭐ iyi tekrar'));
+    return;
   }
   if((b = e.target.closest('.tk-geri'))){
-    r = kayit(k);
+    var son = r.t[r.t.length-1]; if(!son) return;
     ikiDokunus(b, tAdi(r.t.length-1)+' silinsin mi? Yine dokun', function(){
-      r.t.pop(); if(!r.t.length && r.d==='eksik') r.d = 'yok'; takipKaydet(k);
+      olay(k, 'sil', son.id, k + ' ' + tAdi(r.t.length-1) + ' silindi');
     });
   }
 });
+function notKaydet(k, deger){
+  clearTimeout(notZaman[k]); delete notZaman[k];
+  var r = takip[k]; if((r ? r.n : '') === deger) return;
+  olay(k, 'not', deger, k + ' notu: ' + deger.replace(/\s+/g, ' ').slice(0, 200));
+}
 $('#tk-liste').addEventListener('input', function(e){
   if(!e.target.classList.contains('tk-not')) return;
-  var k = e.target.closest('details').dataset.k; kayit(k).n = e.target.value;
-  yaz(TK_ANAHTAR, takip); takipCiz(k);
+  var k = e.target.closest('details').dataset.k, deger = e.target.value;
+  clearTimeout(notZaman[k]); notZaman[k] = setTimeout(function(){ notKaydet(k, deger); }, 1500);
+});
+$('#tk-liste').addEventListener('focusout', function(e){
+  if(e.target.classList.contains('tk-not')) notKaydet(e.target.closest('details').dataset.k, e.target.value);
 });
 
 var tkSecim = bugunGun() ? 'bugun' : 'hepsi';
@@ -832,12 +919,12 @@ $('#tk-paylas').addEventListener('click', function(){
 var tkIndir = null;
 try { if(window.claude && claude.use) claude.use('downloads').then(function(d){ tkIndir = d; }, function(){}); } catch(e){}
 $('#tk-csv').addEventListener('click', function(){
-  var sat = [['Kod','Çekim','Plan','Öncelik','Durum','Tekrar','Dosya adı','Tarih','Saat','İyi','Not']];
+  var sat = [['Kod','Çekim','Plan','Öncelik','Durum','Tekrar','Dosya adı','Tarih','Saat','Kaydeden','İyi','Not']];
   CEKIMLER.forEach(function(c){
     var r = takip[c.k] || {d:'yok', t:[], n:''}, dur = DURUMLAR[r.d].replace(/^\S+\s/, ''), ad = c.ad.replace(/^⭐\s*/, '');
-    if(!r.t.length) sat.push([c.k, ad, c.p, c.o, dur, '', '', '', '', '', r.n || '']);
+    if(!r.t.length) sat.push([c.k, ad, c.p, c.o, dur, '', '', '', '', '', '', r.n || '']);
     r.t.forEach(function(x,i){
-      sat.push([c.k, ad, c.p, c.o, dur, tAdi(i), c.k+'_'+tAdi(i)+'_'+x.t, x.t.slice(6)+'.'+x.t.slice(4,6)+'.'+x.t.slice(0,4), x.s, x.y ? 'evet' : '', i===0 ? (r.n || '') : '']);
+      sat.push([c.k, ad, c.p, c.o, dur, tAdi(i), c.k+'_'+tAdi(i)+'_'+x.t, x.t.slice(6)+'.'+x.t.slice(4,6)+'.'+x.t.slice(0,4), x.s, x.c || '', x.y ? 'evet' : '', i===0 ? (r.n || '') : '']);
     });
   });
   var csv = '﻿' + sat.map(function(s){ return s.map(function(v){ v = String(v); return /[;"\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }).join(';'); }).join('\r\n');
@@ -858,14 +945,24 @@ $('#tk-csv').addEventListener('click', function(){
   } catch(e){ metniGoster(csv.slice(1)); }
 });
 $('#tk-sifirla').addEventListener('click', function(){
-  ikiDokunus(this, '⚠️ Bütün kayıtlar silinsin mi? Yine dokun', function(){
-    takip = {}; yaz(TK_ANAHTAR, takip);
-    CEKIMLER.forEach(function(c){ takipCiz(c.k); }); takipOzet(); sayacGuncelle(); takipSuz();
-    tkMesaj('Takip sıfırlandı.');
+  ikiDokunus(this, ORTAK ? '⚠️ Herkes için sıfırlansın mı? Yine dokun' : '⚠️ Bütün kayıtlar silinsin mi? Yine dokun', function(){
+    olay('*', 'sifirla', null, 'Takip sıfırlandı'); takipSuz();
+    tkMesaj('Takip sıfırlandı.' + (ORTAK ? ' Eski kayıtlar Drive tablosunda duruyor.' : ''));
   });
 });
+(function(){
+  var kisi = $('#tk-kisi'), bilgi = $('#tk-kayit-bilgi');
+  if(ORTAK){
+    kisi.closest('label').hidden = false; kisi.value = kisiAdi();
+    kisi.addEventListener('change', function(){ try { localStorage.setItem(KISI_A, kisi.value.trim().slice(0, 40)); } catch(e){} });
+    bilgi.innerHTML = 'Kayıtlar <b>Drive\'daki ortak tabloya</b> gider: linki açan herkes aynı listeyi görür ve işaretleyebilir. İnternet yoksa kayıt telefonda bekler, bağlanınca kendiliğinden gönderilir.';
+    $('#tk-sifirla').textContent = '🗑️ Takibi herkes için sıfırla';
+  }
+})();
+takipHazir = true;
 CEKIMLER.forEach(function(c){ takipCiz(c.k); });
-takipOzet(); takipSuz();
+takipOzet(); takipSuz(); esitDurum();
+if(ORTAK){ cek(); gonder(); }
 
 /* ---------- EKİPMAN ---------- */
 var CANTA_ANAHTAR = 'sam-ekip-canta-v6', ONAY_ANAHTAR = 'sam-ekip-onay-v6';
