@@ -153,6 +153,28 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
 .tk-dugmeler{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .tk-dugmeler button{border:0;border-radius:999px;background:var(--lacivert);color:#fff;font:inherit;font-weight:700;font-size:14px;padding:9px 14px;cursor:pointer}
 #tk-mesaj{color:var(--yesil);font-weight:700;font-size:14px}
+.tk-cihazlar{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:0 0 8px}
+.tk-cihazlar button{border:1px dashed var(--cizgi);background:none;color:var(--soluk);border-radius:999px;padding:4px 9px;font:inherit;font-size:13px;cursor:pointer}
+.tk-cihazlar button[aria-pressed=true]{border-style:solid;border-color:var(--lacivert);background:var(--mavi-z);color:var(--yazi);font-weight:700}
+.tk-cip b{font-weight:700}
+.tk-cip small{display:block;font-size:11px;color:var(--soluk);font-family:Consolas,Menlo,monospace;line-height:1.2}
+.tk-cip.secik{outline:2px solid var(--lacivert);outline-offset:1px}
+.tk-duzen{border:1px solid var(--cizgi);border-radius:10px;background:var(--kart2);padding:10px 12px;margin:0 0 10px}
+.tk-duzen-bas{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tk-duzen-bas .tk-kapat{margin-left:auto}
+.tk-yildiz{border:1px solid var(--altin);background:var(--kart);color:var(--yazi);border-radius:999px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer;margin-bottom:8px}
+.tk-yildiz.iyi{background:var(--vurgu-z);font-weight:700}
+.tk-klipler{display:grid;gap:6px}
+.tk-klipler label{display:flex;align-items:center;gap:8px;font-size:14px}
+.tk-klipler label>span:first-child{min-width:88px;font-weight:700}
+.tk-klip-alan{display:inline-flex;align-items:center;gap:2px;font-family:Consolas,Menlo,monospace;font-size:14px;color:var(--soluk)}
+.tk-klip-alan input{width:84px;font:inherit;color:var(--yazi);padding:6px 8px;border:1px solid var(--cizgi);border-radius:8px;background:var(--kart)}
+.tk-uyari{color:var(--sari);font-size:13px}
+.tk-dugmeler button.tk-kucuk{background:var(--kart);color:var(--soluk);border:1px solid var(--cizgi);font-weight:400}
+.tk-sayaclar{margin:10px 0 0}
+.tk-sayac-satir{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:6px 0;border-top:1px dashed var(--cizgi)}
+.tk-sayac-satir:first-child{border-top:0}
+.tk-sayac-satir .ad{font-weight:700;min-width:88px}
 .tk-esit{font-size:14px;font-weight:700;margin:8px 0 0;color:var(--soluk)}
 .tk-esit.tamam{color:var(--yesil)}.tk-esit.bekliyor{color:var(--sari)}
 .tk-kisi{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;font-weight:700}
@@ -293,11 +315,18 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
     <b id="tk-sayac">0 / 0 çekim tamam</b>
     <div class="ilerleme"><div id="tk-cubuk"></div></div>
     <div class="tk-ozet" id="tk-ozet"></div>
-    <p class="ipucu" style="margin:6px 0 0">Her tekrar bitince <b>＋ Tekrar</b>'a bas: saat ve sıradaki dosya adı kendiliğinden yazılır. İyi tekrara dokunup ⭐ ver. Çekim bitince durumunu <b>✅ Tamam</b> yap. Saatler akşam dosyaları adlandırırken kartlardaki kayıtlarla eşleştirmeye yarar.</p>
+    <p class="ipucu" style="margin:6px 0 0">Her tekrar bitince <b>＋ Tekrar</b>'a bas: saat, sıradaki dosya adı ve kameraların dosya numaraları kendiliğinden yazılır. Tekrara dokununca açılır: ⭐ ver, numarayı düzelt ya da sil. Çekim bitince durumunu <b>✅ Tamam</b> yap. Saatler akşam dosyaları adlandırırken kartlardaki kayıtlarla eşleştirmeye yarar.</p>
     <p class="ipucu" style="margin:6px 0 0" id="tk-kayit-bilgi">Takibi sahada <b>tek kişi</b> tutar. Kayıtlar yalnızca bu cihazda saklanır; her akşam <b>Durumu paylaş</b> ile ekip grubuna gönder.</p>
     <div id="tk-esit" class="tk-esit" role="status"></div>
     <label class="tk-kisi" hidden>👤 Adın <input id="tk-kisi" type="text" maxlength="40" autocomplete="given-name" placeholder="Kayıtlarda kimin girdiği görünür"></label>
-    <div class="tk-dugmeler"><button type="button" id="tk-paylas">📤 Durumu paylaş</button><button type="button" id="tk-csv">📄 Kurgu listesi (CSV)</button></div>
+    <details class="tk-sayaclar" id="tk-sayaclar">
+      <summary><span class="bas">🔢 Cihaz dosya numaraları</span></summary>
+      <div class="govde">
+        <p class="ipucu" style="margin-top:0">Her cihaz dosyalarını sırayla numaralar (A7: C0045, Zoom: ZOOM0031). Yeni tekrar, cihazın son numarasının bir fazlasını alır. Kart değişince ya da numara kayınca buradan <b>sonraki numarayı</b> düzelt.</p>
+        <div id="tk-sayac-liste"></div>
+      </div>
+    </details>
+    <div class="tk-dugmeler"><button type="button" id="tk-paylas">📤 Durumu paylaş</button><button type="button" id="tk-csv">📄 Kurgu listesi (CSV)</button><button type="button" id="tk-betik">🧾 Adlandırma betiği (Mac)</button></div>
     <div id="tk-mesaj" role="status"></div>
     <textarea id="tk-cikti" rows="8" hidden aria-label="Paylaşılacak metin"></textarea>
   </div>
@@ -398,7 +427,9 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
       <li>Her çekim <b>en az 3 tekrar</b>; her tekrar en az 20 saniye.</li>
       <li>Drone: Cine modu. Yer: gimbal, tripod ya da monopod. <b>Elde serbest çekim yok.</b> Yana kayışlar gimbal ile.</li>
       <li>Havadan 10–15 RAW (DNG) fotoğraf; altın saatte en az 5'i.</li>
-      <li>Dosya adı: <b>ÇekimNo_TekrarNo_Tarih</b>. Örnek: D03_T02_20261117.MP4</li>
+      <li>Dosya adı: <b>ÇekimNo_TekrarNo_Tarih</b>. Örnek: D03_T02_20261117.MP4. Aynı tekrarda birden çok kamera varsa sona kamera harfi: Y09_T03_20261118_A (A7 IV), _B ve _C (A7 III'ler).</li>
+      <li>Kameradaki dosya numarasını (C0045, ZOOM0031) 📋 Takip'te tekrara yaz; numaralar kendiliğinden artar, yalnızca kayınca düzelt.</li>
+      <li>Akşam kartları gün klasörüne cihaz adlarıyla aktar: <b>20261117/A7IV, A7III-1, A7III-2, Air2S, Mini4Pro, OsmoPocket3, ZoomH6</b>. 📋 Takip'teki <b>🧾 Adlandırma betiği</b> dosyaları tek komutla adlandırır.</li>
       <li>Her akşam diske yedek. Kartları dönene kadar silme; ikinci kopya onlar.</li>
     </ul></div>
   </details>
@@ -464,7 +495,7 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
   </div>
 </section>
 
-<footer>v009 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
+<footer>v010 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
 </div>
 
 <script>
@@ -650,19 +681,43 @@ var DURUMLAR = {yok:'⬜ Çekilmedi', eksik:'🔁 Eksik', tamam:'✅ Tamam', dus
 function okuDizi(a){ try { var x = JSON.parse(localStorage.getItem(a) || '[]'); return Array.isArray(x) ? x : []; } catch(e){ return []; } }
 function yazDizi(a,v){ try { localStorage.setItem(a, JSON.stringify(v)); } catch(e){} }
 var olaylar = okuDizi(OLAY_A), kuyruk = ORTAK ? okuDizi(KUYRUK_A) : [];
+/* Kayıt yapan cihazlar. klasor: akşam kartların aktarıldığı klasör adı; ek: aynı tekrarda
+   birden çok kamera varsa dosya adına eklenen harf. Dosya numarası her cihazda kendi sırasıyla artar. */
+var CIHAZLAR = [
+  {id:'a7iv',  ad:'A7 IV',      kisa:'A7IV',  klasor:'A7IV',        ek:'A', ses:false, bicim:'C####'},
+  {id:'a7b',   ad:'A7 III ①',   kisa:'A7III①', klasor:'A7III-1',    ek:'B', ses:false, bicim:'C####'},
+  {id:'a7c',   ad:'A7 III ②',   kisa:'A7III②', klasor:'A7III-2',    ek:'C', ses:false, bicim:'C####'},
+  {id:'air',   ad:'Air 2S',     kisa:'Air',   klasor:'Air2S',       ek:'H', ses:false, bicim:'DJI_####'},
+  {id:'mini',  ad:'Mini 4 Pro', kisa:'Mini',  klasor:'Mini4Pro',    ek:'M', ses:false, bicim:'DJI_…_####'},
+  {id:'osmo',  ad:'Osmo P3',    kisa:'Osmo',  klasor:'OsmoPocket3', ek:'O', ses:false, bicim:'DJI_…_####'},
+  {id:'h6',    ad:'Zoom H6',    kisa:'H6',    klasor:'ZoomH6',      ek:'S', ses:true,  bicim:'ZOOM####'}
+];
+var CIHAZ = {}; CIHAZLAR.forEach(function(c){ CIHAZ[c.id] = c; });
+var VARSAYILAN_CIHAZ = {D03:['air','mini'], Y01:['a7b'], Y08:['a7b'], Y11:['a7b'], E04:['a7b'], E05:['a7b'],
+  Y09:['a7iv','a7b','h6'], Y10:['a7iv','a7b','h6'], E03:['a7iv','a7b'], E06:['h6'], E07:['mini','a7iv'], E08:['osmo']};
+function varsayilanCihaz(k){ return VARSAYILAN_CIHAZ[k] || (k.charAt(0) === 'D' ? ['air'] : ['a7iv']); }
+function klipYaz(id, no){ var c = CIHAZ[id]; if(!c) return ''; var n = ('000' + no).slice(-4); return c.bicim.replace('####', n); }
+var sonNo = {}; // cihaz → en son kaydedilen dosya numarası (sıfırlamadan etkilenmez)
+function bilinir(c){ return typeof sonNo[c] === 'number'; }
 function kur(liste){
-  var s = {};
+  var s = {}; sonNo = {};
+  function isle(v){ if(v && typeof v === 'object') Object.keys(v).forEach(function(c){ var n = parseInt(v[c], 10); if(CIHAZ[c] && n > 0) sonNo[c] = Math.max(sonNo[c] || 0, n); }); }
   liste.forEach(function(e){
+    var v = e.v;
     if(e.o === 'sifirla'){ s = {}; return; }
-    var r = s[e.k] || (s[e.k] = {d:'yok', t:[], n:''}), v = e.v;
-    if(e.o === 'tekrar'){ r.t.push({id:e.i, s:(v && v.s) || '', t:(v && v.t) || '', c:e.c || ''}); if(r.d === 'yok') r.d = 'eksik'; }
+    if(e.o === 'sayac'){ if(v && CIHAZ[v.c]) sonNo[v.c] = Math.max(0, (parseInt(v.no, 10) || 1) - 1); return; }
+    var r = s[e.k] || (s[e.k] = {d:'yok', t:[], n:'', cz:null});
+    if(e.o === 'tekrar'){ r.t.push({id:e.i, s:(v && v.s) || '', t:(v && v.t) || '', c:e.c || '', f:Object.assign({}, v && v.f)}); isle(v && v.f); if(r.d === 'yok') r.d = 'eksik'; }
     else if(e.o === 'sil'){ r.t = r.t.filter(function(x){ return x.id !== v; }); if(!r.t.length && r.d === 'eksik') r.d = 'yok'; }
     else if(e.o === 'iyi'){ r.t.forEach(function(x){ if(v && x.id === v.id){ if(v.y) x.y = 1; else delete x.y; } }); }
+    else if(e.o === 'klip'){ r.t.forEach(function(x){ if(v && x.id === v.id && v.f){ Object.keys(v.f).forEach(function(c){ var n = parseInt(v.f[c], 10); if(!CIHAZ[c]) return; if(n > 0) x.f[c] = n; else delete x.f[c]; }); } }); isle(v && v.f); }
+    else if(e.o === 'cihaz'){ if(Array.isArray(v)) r.cz = v.filter(function(c){ return CIHAZ[c]; }); }
     else if(e.o === 'durum'){ if(DURUMLAR[v]) r.d = v; }
     else if(e.o === 'not'){ r.n = String(v == null ? '' : v); }
   });
   return s;
 }
+function cihazlari(k){ var r = takip[k]; return (r && r.cz) ? r.cz : varsayilanCihaz(k); }
 var takip = kur(olaylar.concat(kuyruk)), takipHazir = false, notZaman = {};
 function durumu(k){ return takip[k] ? takip[k].d : 'yok'; }
 function rid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
@@ -800,27 +855,54 @@ $('#tk-liste').innerHTML = CEKIMLER.map(function(c){
     '<div class="govde">'+
       '<p class="alt-bilgi" style="margin:0 0 6px">🎯 Hedef: '+c.sure+' · '+c.p+' · '+c.g.map(function(g){return g+'. gün';}).join(', ')+'</p>'+
       '<div class="tk-segment" role="group" aria-label="'+c.k+' durumu">'+Object.keys(DURUMLAR).map(function(d){ return '<button type="button" data-d="'+d+'">'+DURUMLAR[d]+'</button>'; }).join('')+'</div>'+
+      '<div class="tk-cihazlar" role="group" aria-label="'+c.k+' için kayıt yapan cihazlar"><span class="alt-bilgi">🎥 Kaydeden:</span>'+CIHAZLAR.map(function(z){ return '<button type="button" data-c="'+z.id+'">'+z.ad+'</button>'; }).join('')+'</div>'+
       '<div class="tk-cipler"></div>'+
+      '<div class="tk-duzen" hidden></div>'+
       '<div class="tk-dosya"></div>'+
       '<textarea class="tk-not" rows="2" aria-label="'+c.k+' notu" placeholder="Not: hangi tekrar iyi, ne eksik, neyi yeniden çekmeli…"></textarea>'+
     '</div></details>';
 }).join('');
 
+function guvenli(s){ return String(s).replace(/[<>"&]/g, ''); }
+function klipOzet(f){ return CIHAZLAR.filter(function(z){ return f && f[z.id]; }).map(function(z){ return z.ek + ('000' + f[z.id]).slice(-4); }).join(' '); }
+var secili = {}; // çekim → düzenlenen tekrarın kimliği
 function takipCiz(k){
   var d = document.querySelector('#tk-liste details[data-k="'+k+'"]'); if(!d) return;
-  var r = takip[k] || {d:'yok', t:[], n:''}, bugun = tarihKod(new Date());
+  var r = takip[k] || {d:'yok', t:[], n:''}, bugun = tarihKod(new Date()), cz = cihazlari(k);
   var iyiler = r.t.map(function(x,i){ return x.y ? '⭐'+tAdi(i) : null; }).filter(Boolean);
   d.dataset.d = r.d;
   d.querySelector('.tk-bilgi').textContent = DURUMLAR[r.d] + (r.t.length ? ' · '+r.t.length+' tekrar' : '') + (iyiler.length ? ' · '+iyiler.join(' ') : '') + (r.n ? ' · 📝' : '');
   d.querySelectorAll('.tk-segment button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.d===r.d ? 'true' : 'false'); });
+  d.querySelectorAll('.tk-cihazlar button').forEach(function(b){ b.setAttribute('aria-pressed', cz.indexOf(b.dataset.c) >= 0 ? 'true' : 'false'); });
+  if(secili[k] && !r.t.some(function(x){ return x.id === secili[k]; })) delete secili[k];
   d.querySelector('.tk-cipler').innerHTML = r.t.length
     ? r.t.map(function(x,i){
         var gun = x.t===bugun ? '' : (GUN_TARIH[x.t] ? GUN_TARIH[x.t]+'. gün ' : x.t.slice(6)+'.'+x.t.slice(4,6)+' ');
-        return '<button type="button" class="tk-cip'+(x.y?' iyi':'')+'" data-i="'+i+'" aria-pressed="'+(x.y?'true':'false')+'" title="İyi tekrar olarak işaretle'+(x.c?' · kaydeden: '+x.c.replace(/[<>"&]/g,''):'')+'">'+(x.y?'⭐ ':'')+tAdi(i)+' · '+gun+x.s+'</button>';
-      }).join('') + '<button type="button" class="tk-kucuk tk-geri">↶ Son tekrarı sil</button>'
+        var ko = klipOzet(x.f);
+        return '<button type="button" class="tk-cip'+(x.y?' iyi':'')+(secili[k]===x.id?' secik':'')+'" data-i="'+i+'" aria-expanded="'+(secili[k]===x.id?'true':'false')+'" title="Aç: iyi tekrar, dosya numaraları, silme'+(x.c?' · kaydeden: '+guvenli(x.c):'')+'">'+(x.y?'⭐ ':'')+'<b>'+tAdi(i)+'</b> · '+gun+x.s+(ko ? '<small>'+ko+'</small>' : '')+'</button>';
+      }).join('')
     : '<span class="alt-bilgi">Henüz tekrar yok. Her tekrar bitince ＋ Tekrar\'a bas.</span>';
-  d.querySelector('.tk-dosya').innerHTML = 'Sıradaki dosya: <code>'+k+'_'+tAdi(r.t.length)+'_'+bugun+'</code>';
+  var duz = d.querySelector('.tk-duzen');
+  if(!duz.contains(document.activeElement)) duzenCiz(k, duz, r, cz);
+  var sira = cz.map(function(c){ return '<span>' + CIHAZ[c].kisa + ' ' + (bilinir(c) ? '<code>' + klipYaz(c, sonNo[c] + 1) + '</code>' : '<b class="tk-uyari">?</b>') + '</span>'; }).join(' · ');
+  d.querySelector('.tk-dosya').innerHTML = 'Sıradaki: <code>'+k+'_'+tAdi(r.t.length)+'_'+bugun+'</code>' + (sira ? ' · ' + sira : '') +
+    (cz.some(function(c){ return !bilinir(c); }) ? '<br><span class="tk-uyari">? = numara bilinmiyor. İlk tekrardan sonra tekrarı açıp kameradaki numarayı gir; sonrakiler kendiliğinden artar.</span>' : '');
   var not = d.querySelector('.tk-not'); if(document.activeElement !== not && !notZaman[k]) not.value = r.n || '';
+}
+function duzenCiz(k, duz, r, cz){
+  var i = -1; r.t.forEach(function(x,j){ if(x.id === secili[k]) i = j; });
+  if(i < 0){ duz.hidden = true; duz.innerHTML = ''; return; }
+  var x = r.t[i], liste = cz.slice();
+  Object.keys(x.f || {}).forEach(function(c){ if(liste.indexOf(c) < 0) liste.push(c); });
+  duz.hidden = false;
+  duz.innerHTML = '<div class="tk-duzen-bas"><b>'+tAdi(i)+'</b> · '+x.s+(x.c ? ' · '+guvenli(x.c) : '')+
+      '<button type="button" class="tk-kucuk tk-kapat" aria-label="Kapat">✕</button></div>'+
+    '<button type="button" class="tk-yildiz'+(x.y?' iyi':'')+'">'+(x.y ? '⭐ İyi tekrar (kaldır)' : '☆ İyi tekrar olarak işaretle')+'</button>'+
+    '<div class="tk-klipler">'+liste.map(function(c){
+      var z = CIHAZ[c], on = z.bicim.split('####')[0];
+      return '<label><span>'+z.ad+'</span><span class="tk-klip-alan">'+on+'<input type="number" inputmode="numeric" min="0" max="9999" data-c="'+c+'" value="'+(x.f && x.f[c] ? x.f[c] : '')+'" placeholder="no"></span></label>';
+    }).join('')+'</div>'+
+    '<div class="tk-dugmeler"><button type="button" class="tk-klip-kaydet">💾 Numaraları kaydet</button><button type="button" class="tk-kucuk tk-tekrar-sil">🗑️ Bu tekrarı sil</button></div>';
 }
 function takipOzet(){
   var say = {yok:0, eksik:0, tamam:0, dus:0}, aT = 0, aH = 0, tekrar = 0;
@@ -833,14 +915,31 @@ function takipOzet(){
   $('#tk-ozet').innerHTML = '<span class="et '+(aT===aH?'d-ok':'et-A')+'">🔴 Olmazsa olmaz: '+aT+' / '+aH+'</span>'+
     '<span class="et d-bak">🔁 '+say.eksik+' eksik</span><span class="et et-gri">⬜ '+say.yok+' çekilmedi</span>'+
     (say.dus ? '<span class="et et-gri">⛔ '+say.dus+' düştü</span>' : '')+'<span class="et et-gri">🎞️ '+tekrar+' tekrar</span>';
+  var sl = $('#tk-sayac-liste');
+  if(!sl.contains(document.activeElement)) sl.innerHTML = CIHAZLAR.map(function(z){
+    return '<div class="tk-sayac-satir"><span class="ad">'+z.ad+'</span><span class="alt-bilgi">son: '+(sonNo[z.id] ? klipYaz(z.id, sonNo[z.id]) : (bilinir(z.id) ? 'yeni kart' : '—'))+'</span>'+
+      '<label class="tk-klip-alan">sonraki '+z.bicim.split('####')[0]+'<input type="number" inputmode="numeric" min="1" max="9999" data-c="'+z.id+'" value="'+(bilinir(z.id) ? sonNo[z.id] + 1 : '')+'" placeholder="no"></label>'+
+      '<button type="button" class="tk-kucuk" data-c="'+z.id+'">Ayarla</button></div>';
+  }).join('');
 }
+$('#tk-sayac-liste').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-c]'); if(!b) return;
+  var c = b.dataset.c, inp = this.querySelector('input[data-c="'+c+'"]'), n = parseInt(inp.value, 10);
+  if(!(n > 0)){ tkMesaj('Önce sonraki numarayı yaz.'); return; }
+  inp.blur();
+  if(bilinir(c) && n === sonNo[c] + 1){ tkMesaj('Zaten ' + klipYaz(c, n) + '.'); return; }
+  olay('*', 'sayac', {c:c, no:n}, CIHAZ[c].ad + ' sonraki dosya: ' + klipYaz(c, n));
+  tkMesaj('🔢 ' + CIHAZ[c].ad + ': sonraki dosya ' + klipYaz(c, n) + '.');
+});
 $('#tk-liste').addEventListener('click', function(e){
   var d = e.target.closest('details.tk'); if(!d) return;
   var k = d.dataset.k, r = takip[k] || {d:'yok', t:[], n:''}, b;
   if((b = e.target.closest('.tk-arti'))){
     e.preventDefault(); // kartı açıp kapatmasın
-    var s = new Date(), saat = iki(s.getHours())+':'+iki(s.getMinutes()), no = tAdi(r.t.length);
-    olay(k, 'tekrar', {s:saat, t:tarihKod(s)}, k + ' ' + no + ' · ' + saat);
+    var s = new Date(), saat = iki(s.getHours())+':'+iki(s.getMinutes()), no = tAdi(r.t.length), f = {};
+    cihazlari(k).forEach(function(c){ if(bilinir(c)) f[c] = sonNo[c] + 1; });
+    var ko = CIHAZLAR.filter(function(z){ return f[z.id]; }).map(function(z){ return z.kisa + ' ' + klipYaz(z.id, f[z.id]); }).join(', ');
+    olay(k, 'tekrar', {s:saat, t:tarihKod(s), f:f}, k + ' ' + no + ' · ' + saat + (ko ? ' · ' + ko : ''));
     clearTimeout(b._z); b.textContent = '✓ ' + no;
     b._z = setTimeout(function(){ b.textContent = '＋ Tekrar'; }, 1400);
     return;
@@ -849,15 +948,41 @@ $('#tk-liste').addEventListener('click', function(e){
     if(b.dataset.d !== r.d) olay(k, 'durum', b.dataset.d, k + ' → ' + DURUMLAR[b.dataset.d]);
     return;
   }
-  if((b = e.target.closest('.tk-cip'))){
-    var i = +b.dataset.i, x = r.t[i]; if(!x) return;
-    olay(k, 'iyi', {id:x.id, y:!x.y}, k + ' ' + tAdi(i) + (x.y ? ' ⭐ kaldırıldı' : ' ⭐ iyi tekrar'));
+  if((b = e.target.closest('.tk-cihazlar button'))){
+    var cz = cihazlari(k).slice(), c = b.dataset.c, yer = cz.indexOf(c);
+    if(yer >= 0) cz.splice(yer, 1); else cz.push(c);
+    cz = CIHAZLAR.map(function(z){ return z.id; }).filter(function(id){ return cz.indexOf(id) >= 0; });
+    olay(k, 'cihaz', cz, k + ' cihazlar: ' + (cz.map(function(id){ return CIHAZ[id].ad; }).join(', ') || 'yok'));
     return;
   }
-  if((b = e.target.closest('.tk-geri'))){
-    var son = r.t[r.t.length-1]; if(!son) return;
-    ikiDokunus(b, tAdi(r.t.length-1)+' silinsin mi? Yine dokun', function(){
-      olay(k, 'sil', son.id, k + ' ' + tAdi(r.t.length-1) + ' silindi');
+  if((b = e.target.closest('.tk-cip'))){
+    var x = r.t[+b.dataset.i]; if(!x) return;
+    if(secili[k] === x.id) delete secili[k]; else secili[k] = x.id;
+    takipCiz(k); return;
+  }
+  var j = -1; r.t.forEach(function(y, n){ if(y.id === secili[k]) j = n; });
+  var sx = r.t[j];
+  if(e.target.closest('.tk-kapat')){ delete secili[k]; takipCiz(k); return; }
+  if(!sx) return;
+  if(e.target.closest('.tk-yildiz')){
+    olay(k, 'iyi', {id:sx.id, y:!sx.y}, k + ' ' + tAdi(j) + (sx.y ? ' ⭐ kaldırıldı' : ' ⭐ iyi tekrar'));
+    return;
+  }
+  if(e.target.closest('.tk-klip-kaydet')){
+    var degis = {}, yazi = [];
+    d.querySelectorAll('.tk-klipler input').forEach(function(inp){
+      var c = inp.dataset.c, n = parseInt(inp.value, 10) || 0, eski = (sx.f && sx.f[c]) || 0;
+      if(n !== eski){ degis[c] = n; yazi.push(CIHAZ[c].kisa + ' ' + (n ? klipYaz(c, n) : 'silindi')); }
+    });
+    document.activeElement && document.activeElement.blur && document.activeElement.blur();
+    if(yazi.length) olay(k, 'klip', {id:sx.id, f:degis}, k + ' ' + tAdi(j) + ' dosya: ' + yazi.join(', '));
+    delete secili[k]; takipCiz(k);
+    tkMesaj(yazi.length ? '💾 ' + k + ' ' + tAdi(j) + ' numaraları kaydedildi.' : 'Değişiklik yok.');
+    return;
+  }
+  if((b = e.target.closest('.tk-tekrar-sil'))){
+    ikiDokunus(b, tAdi(j) + ' silinsin mi? Yine dokun', function(){
+      delete secili[k]; olay(k, 'sil', sx.id, k + ' ' + tAdi(j) + ' silindi');
     });
   }
 });
@@ -919,30 +1044,94 @@ $('#tk-paylas').addEventListener('click', function(){
 var tkIndir = null;
 try { if(window.claude && claude.use) claude.use('downloads').then(function(d){ tkIndir = d; }, function(){}); } catch(e){}
 $('#tk-csv').addEventListener('click', function(){
-  var sat = [['Kod','Çekim','Plan','Öncelik','Durum','Tekrar','Dosya adı','Tarih','Saat','Kaydeden','İyi','Not']];
+  var sat = [['Kod','Çekim','Plan','Öncelik','Durum','Tekrar','Dosya adı','Tarih','Saat','Kaydeden','İyi'].concat(CIHAZLAR.map(function(z){ return z.ad; }), ['Not'])];
+  var bos = CIHAZLAR.map(function(){ return ''; });
   CEKIMLER.forEach(function(c){
     var r = takip[c.k] || {d:'yok', t:[], n:''}, dur = DURUMLAR[r.d].replace(/^\S+\s/, ''), ad = c.ad.replace(/^⭐\s*/, '');
-    if(!r.t.length) sat.push([c.k, ad, c.p, c.o, dur, '', '', '', '', '', '', r.n || '']);
+    if(!r.t.length) sat.push([c.k, ad, c.p, c.o, dur, '', '', '', '', '', ''].concat(bos, [r.n || '']));
     r.t.forEach(function(x,i){
-      sat.push([c.k, ad, c.p, c.o, dur, tAdi(i), c.k+'_'+tAdi(i)+'_'+x.t, x.t.slice(6)+'.'+x.t.slice(4,6)+'.'+x.t.slice(0,4), x.s, x.c || '', x.y ? 'evet' : '', i===0 ? (r.n || '') : '']);
+      sat.push([c.k, ad, c.p, c.o, dur, tAdi(i), c.k+'_'+tAdi(i)+'_'+x.t, x.t.slice(6)+'.'+x.t.slice(4,6)+'.'+x.t.slice(0,4), x.s, x.c || '', x.y ? 'evet' : '']
+        .concat(CIHAZLAR.map(function(z){ return x.f && x.f[z.id] ? klipYaz(z.id, x.f[z.id]) : ''; }), [i===0 ? (r.n || '') : '']));
     });
   });
   var csv = '﻿' + sat.map(function(s){ return s.map(function(v){ v = String(v); return /[;"\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }).join(';'); }).join('\r\n');
-  var ad = 'Sam_Cekim_Takip_' + tarihKod(new Date()) + '.csv';
-  if(tkIndir){ // Claude sayfasında dosya, izinli indirme ile verilir
-    tkIndir.save({filename: ad, data: csv}).then(function(){ tkMesaj('📄 CSV kaydedildi (Excel ile açılır).'); },
-      function(err){ if(!err || err.code !== 'declined') metniGoster(csv.slice(1)); });
+  dosyaVer('Sam_Cekim_Takip_' + tarihKod(new Date()) + '.csv', csv, 'text/csv;charset=utf-8', '📄 CSV indirildi (Excel ile açılır).');
+});
+function dosyaVer(ad, icerik, tip, mesaj){
+  if(tkIndir){ // Claude sayfasında dosya, izinli indirme ile verilir (.sh izinli değil → .txt)
+    var ad2 = /\.sh$/.test(ad) ? ad.replace(/\.sh$/, '.sh.txt') : ad;
+    tkIndir.save({filename: ad2, data: icerik}).then(function(){ tkMesaj(mesaj); },
+      function(err){ if(!err || err.code !== 'declined') metniGoster(icerik.replace(/^﻿/, '')); });
     return;
   }
-  if(window.claude){ metniGoster(csv.slice(1)); return; }
+  if(window.claude){ metniGoster(icerik.replace(/^﻿/, '')); return; }
   try {
     var a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    a.href = URL.createObjectURL(new Blob([icerik], {type:tip}));
     a.download = ad;
     document.body.appendChild(a); a.click();
     setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-    tkMesaj('📄 CSV indirildi (Excel ile açılır).');
-  } catch(e){ metniGoster(csv.slice(1)); }
+    tkMesaj(mesaj);
+  } catch(e){ metniGoster(icerik.replace(/^﻿/, '')); }
+}
+function betikMetni(){
+  var n = new Date(), satir = [], say = 0;
+  CEKIMLER.forEach(function(c){
+    var r = takip[c.k]; if(!r) return;
+    r.t.forEach(function(x, i){
+      var f = x.f || {}, cz = Object.keys(f).filter(function(id){ return CIHAZ[id] && f[id] > 0; });
+      var video = cz.filter(function(id){ return !CIHAZ[id].ses; });
+      cz.forEach(function(id){
+        var z = CIHAZ[id], n4 = ('000' + f[id]).slice(-4), desen, onek;
+        if(id === 'mini' || id === 'osmo'){ desen = 'DJI_*_' + n4 + '_*'; onek = 'DJI_*_' + n4; }
+        else if(id === 'air'){ desen = 'DJI_' + n4 + '*'; onek = 'DJI_' + n4; }
+        else if(id === 'h6'){ desen = 'ZOOM' + n4 + '*'; onek = 'ZOOM' + n4; }
+        else { desen = 'C' + n4 + '*'; onek = 'C' + n4; }
+        var yeni = c.k + '_' + tAdi(i) + '_' + x.t + (!z.ses && video.length > 1 ? '_' + z.ek : '');
+        satir.push("ad '" + z.klasor + "' '" + desen + "' '" + onek + "' '" + yeni + "' '" + x.t + "'");
+        say++;
+      });
+    });
+  });
+  return [
+    '#!/bin/bash',
+    '# Şam çekimi · dosya adlandırma betiği',
+    '# ' + n.toLocaleString('tr-TR', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}) + ' tarihli takip kaydından üretildi (' + say + ' eşleşme).',
+    '#',
+    '# Kartları gün klasörüne cihaz adlarıyla aktar: ' + CIHAZLAR.map(function(z){ return z.klasor; }).join(' '),
+    '# Sonra Terminal\'de o gün klasörüne gir (cd …/20261118) ve:',
+    '#   bash adlandir.sh                    → yalnızca ne yapılacağını gösterir, dosyalara dokunmaz',
+    '#   bash adlandir.sh uygula 20261118    → o günün dosyalarını yeniden adlandırır',
+    '# Hiçbir dosya silinmez ve üzerine yazılmaz. Geri almak için oluşan geri_al.sh çalıştırılır.',
+    '',
+    'KIP="${1:-deneme}"; GUN="${2:-}"; SAYI=0; EKSIK=0',
+    '[ "$KIP" = "uygula" ] && [ ! -f geri_al.sh ] && echo "#!/bin/bash" > geri_al.sh',
+    'ad() { # klasör, bulma deseni, kırpılacak önek, yeni ad, tarih',
+    '  klasor="$1"; desen="$2"; onek="$3"; yeni="$4"; tarih="$5"',
+    '  [ -n "$GUN" ] && [ "$GUN" != "$tarih" ] && return',
+    '  if [ ! -d "$klasor" ]; then echo "⚠️  $yeni: \'$klasor\' klasörü yok"; EKSIK=$((EKSIK+1)); return; fi',
+    '  bulundu=0',
+    '  while IFS= read -r f; do',
+    '    bulundu=1; dizin=$(dirname "$f"); dosya=$(basename "$f")',
+    '    kuyruk="${dosya#$onek}"; hedef="$dizin/$yeni$kuyruk"',
+    '    if [ -e "$hedef" ]; then echo "⏭️  zaten var: $hedef"; continue; fi',
+    '    echo "$f  →  $yeni$kuyruk"',
+    '    if [ "$KIP" = "uygula" ]; then mv -n "$f" "$hedef" && printf \'mv -n %q %q\\n\' "$hedef" "$f" >> geri_al.sh && SAYI=$((SAYI+1)); fi',
+    '  done < <(find "$klasor" -type f -name "$desen" ! -name \'._*\')',
+    '  [ $bulundu = 1 ] || { echo "❓ $yeni: $klasor içinde $desen bulunamadı"; EKSIK=$((EKSIK+1)); }',
+    '}',
+    ''
+  ].concat(satir, [
+    '',
+    'echo',
+    'if [ "$KIP" = "uygula" ]; then echo "✅ $SAYI dosya yeniden adlandırıldı. Geri almak için: bash geri_al.sh"; else echo "Bu bir denemeydi; hiçbir dosya değişmedi. Uygulamak için: bash adlandir.sh uygula $GUN"; fi',
+    '[ $EKSIK -gt 0 ] && echo "⚠️  $EKSIK kayıt eşleşmedi; yukarıya bak."',
+    'exit 0',
+    ''
+  ]).join('\n');
+}
+$('#tk-betik').addEventListener('click', function(){
+  dosyaVer('adlandir.sh', betikMetni(), 'text/x-shellscript;charset=utf-8', '🧾 Betik indirildi. Gün klasörüne koy, Terminal\'de: bash adlandir.sh');
 });
 $('#tk-sifirla').addEventListener('click', function(){
   ikiDokunus(this, ORTAK ? '⚠️ Herkes için sıfırlansın mı? Yine dokun' : '⚠️ Bütün kayıtlar silinsin mi? Yine dokun', function(){
