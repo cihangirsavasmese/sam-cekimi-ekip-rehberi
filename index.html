@@ -123,6 +123,36 @@ a.senaryo-pdf{display:flex;gap:12px;align-items:center;text-decoration:none;colo
 a.senaryo-pdf:hover{background:var(--kart2)}
 a.senaryo-pdf .sim{font-size:28px;line-height:1;flex:none}
 a.senaryo-pdf .ok{margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-size:20px;flex:none}
+/* takip */
+details.tk{border-left:6px solid var(--gri-c)}
+details.tk[data-d=eksik]{border-left-color:var(--sari)}
+details.tk[data-d=tamam]{border-left-color:var(--yesil)}
+details.tk[data-d=dus]{opacity:.7}
+details.tk[data-d=dus] .bas{text-decoration:line-through}
+.tk summary{gap:8px;padding:10px 12px}
+.tk-ad{min-width:0;flex:1}
+.tk-bilgi{display:block}
+.tk-arti{flex:none;border:0;border-radius:999px;background:var(--yesil);color:#fff;font:inherit;font-weight:700;font-size:14px;padding:8px 12px;cursor:pointer;white-space:nowrap}
+.tk-arti:active{filter:brightness(.88)}
+.tk-segment{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:4px 0 10px}
+.tk-segment button{border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);border-radius:8px;padding:9px 2px;font:inherit;font-size:13px;cursor:pointer;min-width:0}
+.tk-segment button[aria-pressed=true]{color:#fff;border-color:transparent;font-weight:700}
+.tk-segment button[data-d=yok][aria-pressed=true]{background:#6b7686}
+.tk-segment button[data-d=eksik][aria-pressed=true]{background:var(--sari)}
+.tk-segment button[data-d=tamam][aria-pressed=true]{background:var(--yesil)}
+.tk-segment button[data-d=dus][aria-pressed=true]{background:#5d6675}
+.tk-cipler{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:2px 0 8px}
+.tk-cip{border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);border-radius:999px;padding:6px 11px;font:inherit;font-size:14px;cursor:pointer}
+.tk-cip.iyi{background:var(--vurgu-z);border-color:var(--altin);font-weight:700}
+.tk-kucuk{border:1px solid var(--cizgi);background:var(--kart);color:var(--soluk);border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+.tk-dosya{font-size:14px;color:var(--soluk);margin-bottom:8px}
+.tk-dosya code{font-family:Consolas,Menlo,monospace;font-size:13px;color:var(--yazi);background:var(--gri-z);padding:1px 6px;border-radius:5px}
+.tk-not,#tk-cikti{width:100%;font:inherit;font-size:15px;padding:8px 10px;border:1px solid var(--cizgi);border-radius:8px;background:var(--kart2);color:var(--yazi);resize:vertical}
+.tk-ozet{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.tk-ozet .et{font-size:13px;padding:2px 8px}
+.tk-dugmeler{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tk-dugmeler button{border:0;border-radius:999px;background:var(--lacivert);color:#fff;font:inherit;font-weight:700;font-size:14px;padding:9px 14px;cursor:pointer}
+#tk-mesaj{color:var(--yesil);font-weight:700;font-size:14px}
 @media (max-width:560px){h1{font-size:23px}dl{grid-template-columns:1fr}dt{margin-top:4px}.saat-satir{grid-template-columns:1fr;gap:0}.eslesme{grid-template-columns:1fr}.eslesme span{text-align:center}}
 @media print{.sekmeler,.suzgec{display:none}section.panel{display:block;padding-bottom:10px}body{background:#fff}details{break-inside:avoid}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
@@ -141,6 +171,7 @@ a.senaryo-pdf .ok{margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-s
 <div class="sekmeler" role="tablist"><div class="ic">
   <button role="tab" data-sekme="film">🎞️ Film</button>
   <button role="tab" data-sekme="cekimler">🎯 Çekimler</button>
+  <button role="tab" data-sekme="takip">📋 Takip</button>
   <button role="tab" data-sekme="gunler">🗓️ 3 Gün</button>
   <button role="tab" data-sekme="ekipman">🧳 Ekipman</button>
   <button role="tab" data-sekme="kurallar">📏 Kurallar</button>
@@ -236,7 +267,7 @@ a.senaryo-pdf .ok{margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-s
   <div class="kart">
     <b id="sayac">0 / 0 çekildi</b>
     <div class="ilerleme"><div id="cubuk"></div></div>
-    <span class="ipucu">Biten çekimin kutusunu işaretle. İşaretler yalnızca bu cihazda saklanır.</span>
+    <span class="ipucu">Biten çekimin kutusunu işaretle. Tekrarları, saatleri ve notları <b>📋 Takip</b> sekmesinde tut; iki sekme birbirine bağlı. İşaretler yalnızca bu cihazda saklanır.</span>
   </div>
   <div class="suzgec" id="suzgec">
     <button data-s="hepsi" class="secili">Tümü</button>
@@ -249,6 +280,31 @@ a.senaryo-pdf .ok{margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-s
     <button data-s="g3">3. gün</button>
   </div>
   <div id="cekim-liste"></div>
+</section>
+
+<!-- ================= TAKİP ================= -->
+<section class="panel" id="takip">
+  <div class="kart" id="tk-kart">
+    <b id="tk-sayac">0 / 0 çekim tamam</b>
+    <div class="ilerleme"><div id="tk-cubuk"></div></div>
+    <div class="tk-ozet" id="tk-ozet"></div>
+    <p class="ipucu" style="margin:6px 0 0">Her tekrar bitince <b>＋ Tekrar</b>'a bas: saat ve sıradaki dosya adı kendiliğinden yazılır. İyi tekrara dokunup ⭐ ver. Çekim bitince durumunu <b>✅ Tamam</b> yap. Saatler akşam dosyaları adlandırırken kartlardaki kayıtlarla eşleştirmeye yarar.</p>
+    <p class="ipucu" style="margin:6px 0 0">Takibi sahada <b>tek kişi</b> tutar. Kayıtlar yalnızca bu cihazda saklanır; her akşam <b>Durumu paylaş</b> ile ekip grubuna gönder.</p>
+    <div class="tk-dugmeler"><button type="button" id="tk-paylas">📤 Durumu paylaş</button><button type="button" id="tk-csv">📄 Kurgu listesi (CSV)</button></div>
+    <div id="tk-mesaj" role="status"></div>
+    <textarea id="tk-cikti" rows="8" hidden aria-label="Paylaşılacak metin"></textarea>
+  </div>
+  <div class="suzgec" id="tk-suzgec">
+    <button data-s="bugun" hidden>📅 Bugün</button>
+    <button data-s="eksik">⏳ Eksikler</button>
+    <button data-s="A">🔴 Olmazsa olmaz</button>
+    <button data-s="hepsi">Tümü</button>
+    <button data-s="g1">1. gün</button>
+    <button data-s="g2">2. gün</button>
+    <button data-s="g3">3. gün</button>
+  </div>
+  <div id="tk-liste"></div>
+  <p style="text-align:right;margin-top:14px"><button type="button" class="tk-kucuk" id="tk-sifirla">🗑️ Takibi sıfırla</button></p>
 </section>
 
 <!-- ================= 3 GÜN ================= -->
@@ -369,7 +425,7 @@ a.senaryo-pdf .ok{margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-s
     <label><input type="checkbox"><span>🕌 <b>Eski Şam çekim izni:</b> yoksa Y01 hazır görüntüyle çözülecek.</span></label>
     <label><input type="checkbox"><span>🏊 <b>Havuz:</b> açık mı kapalı mı, dolu mu?</span></label>
     <label><input type="checkbox"><span>✍️ <b>Y10 provası:</b> monopod hareketini gitmeden bir kez dene.</span></label>
-    <label><input type="checkbox"><span>👥 <b>Görev dağılımı:</b> kim drone, kim yer kamerası, kim ses ve saha?</span></label>
+    <label><input type="checkbox"><span>👥 <b>Görev dağılımı:</b> kim drone, kim yer kamerası, kim ses ve saha? <b>📋 Takibi</b> kim tutacak?</span></label>
     <label><input type="checkbox"><span>🖨️ <b>Senaryo çıktısını al:</b> <a href="Sam_RTE_Turk_Okulu_Senaryo_v010.pdf" target="_blank" rel="noopener">senaryo v010 PDF</a>, yatay A4, 7 sayfa. Sahada bir kopyası yanımızda olsun.</span></label>
   </div>
 
@@ -401,7 +457,7 @@ a.senaryo-pdf .ok{margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-s
   </div>
 </section>
 
-<footer>v007 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
+<footer>v008 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
 </div>
 
 <script>
@@ -479,7 +535,7 @@ var GUNLER = [
    ["15:00–16:15","🔁 Provalar, öğrencisiz: Y09 kapısında ışığa bak, kadrajı kur. Y10 monopod hareketini boş sınıfta 5 kez dene ve izle."],
    ["16:30–17:30","🚁 D09 → D05 → D04 (uzun gölge).<br>🎥 Cephe yerden, E02 bayrak."],
    ["17:30–17:55","🚁 D10 mavi saat."],
-   ["Gece","Diske yedek. Malzemeyi izle, eksik listesi yaz."]]},
+   ["Gece","Diske yedek. Malzemeyi izle. 📋 Takip'ten durumu ekibe paylaş; eksikler yarının ilk işi."]]},
  {ad:"2. gün · Çarşamba 18 Kasım", tema:"⭐ Doruk günü: sabah Y10, ikindi Y09", renk:"var(--kirmizi)", satir:[
    ["07:10–08:00","🚁 D01 tekrarı, E01, dünün eksikleri.<br>🎥 Eksik dış detaylar."],
    ["08:00–09:00","Veli izin formlarını teslim al, kıyafet kontrolü, Y10 sınıfını hazırla."],
@@ -565,7 +621,7 @@ var ESYA = [
    ["Görev yazısı ve çekim izinleri","var",""],
    ["Boş muvafakatname formları","var","Okul toplayamadıysa sahada imzalatmak için."],
    ["Seri numaralı ekipman listesi × 2","var","Havalimanı ve sınır geçişi için."],
-   ["Basılı senaryo, çekim listesi ve takip çizelgesi","al","Senaryo v010 PDF'i Film sekmesinin başında. Çizelge sütunları: kod, tekrar, saat, not."]]}
+   ["Basılı senaryo, çekim listesi ve takip çizelgesi","al","Senaryo v010 PDF'i Film sekmesinin başında. Takip artık 📋 Takip sekmesinde; basılı çizelge telefon bitince yedek (sütunlar: kod, tekrar, saat, not)."]]}
 ];
 var DURUM = {var:["Geliyor","d-var"], al:["🛒 Hazırlanacak","d-al"], bak:["🔎 Kontrol et","d-bak"]};
 
@@ -574,6 +630,18 @@ function oku(a){ try { return JSON.parse(localStorage.getItem(a) || '{}') || {};
 function yaz(a,v){ try { localStorage.setItem(a, JSON.stringify(v)); } catch(e){} }
 function $(s){ return document.querySelector(s); }
 function tur(k){ return k.charAt(0); }
+
+/* ---------- TAKİP VERİSİ (Çekimler ve Takip sekmeleri ortak kullanır) ---------- */
+var TK_ANAHTAR = 'sam-ekip-takip';
+var takip = oku(TK_ANAHTAR);
+(function(){ // v007'deki tek kutulu işaretleri bir kez taşı
+  var eski = oku('sam-ekip-cekim'), var_ = false;
+  Object.keys(eski).forEach(function(k){ if(eski[k] && !takip[k]){ takip[k] = {d:'tamam', t:[], n:''}; var_ = true; } });
+  if(var_) yaz(TK_ANAHTAR, takip);
+  try { localStorage.removeItem('sam-ekip-cekim'); } catch(e){}
+})();
+function kayit(k){ return takip[k] || (takip[k] = {d:'yok', t:[], n:''}); }
+function durumu(k){ return takip[k] ? takip[k].d : 'yok'; }
 
 /* ---------- FİLM ---------- */
 $('#serit').innerHTML = BOLUMLER.map(function(b,i){
@@ -592,7 +660,6 @@ $('#serit').addEventListener('click', function(e){
 });
 
 /* ---------- ÇEKİMLER ---------- */
-var bitti = oku('sam-ekip-cekim');
 $('#cekim-liste').innerHTML = CEKIMLER.map(function(c){
   var t = tur(c.k), sinif = t==='Y'?'y':(t==='E'?'e':'');
   return '<details data-k="'+c.k+'" data-o="'+c.o+'" data-t="'+t+'" data-g="'+c.g.join(',')+'">'+
@@ -609,7 +676,7 @@ $('#cekim-liste').innerHTML = CEKIMLER.map(function(c){
 function sayacGuncelle(){
   var n = 0;
   document.querySelectorAll('#cekim-liste details').forEach(function(d){
-    var v = !!bitti[d.dataset.k]; d.classList.toggle('bitti', v); d.querySelector('.tik').checked = v; if(v) n++;
+    var v = durumu(d.dataset.k) === 'tamam'; d.classList.toggle('bitti', v); d.querySelector('.tik').checked = v; if(v) n++;
   });
   $('#sayac').textContent = n + ' / ' + CEKIMLER.length + ' çekildi';
   $('#cubuk').style.width = (100*n/CEKIMLER.length) + '%';
@@ -617,9 +684,10 @@ function sayacGuncelle(){
 $('#cekim-liste').addEventListener('click', function(e){
   if(!e.target.classList.contains('tik')) return;
   e.stopPropagation();
-  var k = e.target.closest('details').dataset.k;
-  bitti[k] = e.target.checked; yaz('sam-ekip-cekim', bitti);
-  setTimeout(sayacGuncelle, 0);
+  var k = e.target.closest('details').dataset.k, r = kayit(k);
+  r.d = e.target.checked ? 'tamam' : (r.t.length ? 'eksik' : 'yok');
+  yaz(TK_ANAHTAR, takip);
+  setTimeout(function(){ sayacGuncelle(); takipCiz(k); takipOzet(); }, 0);
 });
 sayacGuncelle();
 $('#suzgec').addEventListener('click', function(e){
@@ -631,6 +699,173 @@ $('#suzgec').addEventListener('click', function(e){
     d.hidden = !goster;
   });
 });
+
+/* ---------- TAKİP ---------- */
+var DURUMLAR = {yok:'⬜ Çekilmedi', eksik:'🔁 Eksik', tamam:'✅ Tamam', dus:'⛔ Düştü'};
+var GUN_TARIH = {'20261117':1, '20261118':2, '20261119':3};
+function iki(n){ return ('0'+n).slice(-2); }
+function tarihKod(d){ return d.getFullYear() + iki(d.getMonth()+1) + iki(d.getDate()); }
+function bugunGun(){ return GUN_TARIH[tarihKod(new Date())] || 0; }
+function tAdi(i){ return 'T' + iki(i+1); }
+function ikiDokunus(b, soru, fn){ // onay penceresi yerine: ikinci dokunuş onaylar
+  if(b.dataset.emin){ clearTimeout(b._z); b.textContent = b.dataset.ilk; delete b.dataset.emin; fn(); return; }
+  b.dataset.ilk = b.textContent; b.dataset.emin = '1'; b.textContent = soru;
+  b._z = setTimeout(function(){ b.textContent = b.dataset.ilk; delete b.dataset.emin; }, 3000);
+}
+
+$('#tk-liste').innerHTML = CEKIMLER.map(function(c){
+  var t = tur(c.k), sinif = t==='Y'?'y':(t==='E'?'e':'');
+  return '<details class="tk" data-k="'+c.k+'" data-o="'+c.o+'" data-g="'+c.g.join(',')+'">'+
+    '<summary><span class="kod '+sinif+'">'+c.k+'</span><span class="tk-ad"><span class="bas">'+c.ad+'</span> <span class="et et-'+c.o+'">'+c.o+'</span><span class="alt-bilgi tk-bilgi"></span></span>'+
+    '<button type="button" class="tk-arti" aria-label="'+c.k+' için tekrar ekle">＋ Tekrar</button></summary>'+
+    '<div class="govde">'+
+      '<p class="alt-bilgi" style="margin:0 0 6px">🎯 Hedef: '+c.sure+' · '+c.p+' · '+c.g.map(function(g){return g+'. gün';}).join(', ')+'</p>'+
+      '<div class="tk-segment" role="group" aria-label="'+c.k+' durumu">'+Object.keys(DURUMLAR).map(function(d){ return '<button type="button" data-d="'+d+'">'+DURUMLAR[d]+'</button>'; }).join('')+'</div>'+
+      '<div class="tk-cipler"></div>'+
+      '<div class="tk-dosya"></div>'+
+      '<textarea class="tk-not" rows="2" aria-label="'+c.k+' notu" placeholder="Not: hangi tekrar iyi, ne eksik, neyi yeniden çekmeli…"></textarea>'+
+    '</div></details>';
+}).join('');
+
+function takipCiz(k){
+  var d = document.querySelector('#tk-liste details[data-k="'+k+'"]'); if(!d) return;
+  var r = takip[k] || {d:'yok', t:[], n:''}, bugun = tarihKod(new Date());
+  var iyiler = r.t.map(function(x,i){ return x.y ? '⭐'+tAdi(i) : null; }).filter(Boolean);
+  d.dataset.d = r.d;
+  d.querySelector('.tk-bilgi').textContent = DURUMLAR[r.d] + (r.t.length ? ' · '+r.t.length+' tekrar' : '') + (iyiler.length ? ' · '+iyiler.join(' ') : '') + (r.n ? ' · 📝' : '');
+  d.querySelectorAll('.tk-segment button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.d===r.d ? 'true' : 'false'); });
+  d.querySelector('.tk-cipler').innerHTML = r.t.length
+    ? r.t.map(function(x,i){
+        var gun = x.t===bugun ? '' : (GUN_TARIH[x.t] ? GUN_TARIH[x.t]+'. gün ' : x.t.slice(6)+'.'+x.t.slice(4,6)+' ');
+        return '<button type="button" class="tk-cip'+(x.y?' iyi':'')+'" data-i="'+i+'" aria-pressed="'+(x.y?'true':'false')+'" title="İyi tekrar olarak işaretle">'+(x.y?'⭐ ':'')+tAdi(i)+' · '+gun+x.s+'</button>';
+      }).join('') + '<button type="button" class="tk-kucuk tk-geri">↶ Son tekrarı sil</button>'
+    : '<span class="alt-bilgi">Henüz tekrar yok. Her tekrar bitince ＋ Tekrar\'a bas.</span>';
+  d.querySelector('.tk-dosya').innerHTML = 'Sıradaki dosya: <code>'+k+'_'+tAdi(r.t.length)+'_'+bugun+'</code>';
+  var not = d.querySelector('.tk-not'); if(document.activeElement !== not) not.value = r.n || '';
+}
+function takipOzet(){
+  var say = {yok:0, eksik:0, tamam:0, dus:0}, aT = 0, aH = 0, tekrar = 0;
+  CEKIMLER.forEach(function(c){
+    var r = takip[c.k] || {d:'yok', t:[]}; say[r.d]++; tekrar += r.t.length;
+    if(c.o==='A'){ aH++; if(r.d==='tamam') aT++; }
+  });
+  $('#tk-sayac').textContent = say.tamam + ' / ' + CEKIMLER.length + ' çekim tamam';
+  $('#tk-cubuk').style.width = (100*say.tamam/CEKIMLER.length) + '%';
+  $('#tk-ozet').innerHTML = '<span class="et '+(aT===aH?'d-ok':'et-A')+'">🔴 Olmazsa olmaz: '+aT+' / '+aH+'</span>'+
+    '<span class="et d-bak">🔁 '+say.eksik+' eksik</span><span class="et et-gri">⬜ '+say.yok+' çekilmedi</span>'+
+    (say.dus ? '<span class="et et-gri">⛔ '+say.dus+' düştü</span>' : '')+'<span class="et et-gri">🎞️ '+tekrar+' tekrar</span>';
+}
+function takipKaydet(k){ yaz(TK_ANAHTAR, takip); takipCiz(k); takipOzet(); sayacGuncelle(); }
+
+$('#tk-liste').addEventListener('click', function(e){
+  var d = e.target.closest('details.tk'); if(!d) return;
+  var k = d.dataset.k, r, b;
+  if((b = e.target.closest('.tk-arti'))){
+    e.preventDefault(); // kartı açıp kapatmasın
+    var s = new Date(); r = kayit(k);
+    r.t.push({s: iki(s.getHours())+':'+iki(s.getMinutes()), t: tarihKod(s)});
+    if(r.d==='yok') r.d = 'eksik';
+    takipKaydet(k);
+    clearTimeout(b._z); b.textContent = '✓ ' + tAdi(r.t.length-1);
+    b._z = setTimeout(function(){ b.textContent = '＋ Tekrar'; }, 1400);
+    return;
+  }
+  if((b = e.target.closest('.tk-segment button'))){ kayit(k).d = b.dataset.d; takipKaydet(k); return; }
+  if((b = e.target.closest('.tk-cip'))){
+    var x = kayit(k).t[+b.dataset.i]; if(x.y) delete x.y; else x.y = 1;
+    takipKaydet(k); return;
+  }
+  if((b = e.target.closest('.tk-geri'))){
+    r = kayit(k);
+    ikiDokunus(b, tAdi(r.t.length-1)+' silinsin mi? Yine dokun', function(){
+      r.t.pop(); if(!r.t.length && r.d==='eksik') r.d = 'yok'; takipKaydet(k);
+    });
+  }
+});
+$('#tk-liste').addEventListener('input', function(e){
+  if(!e.target.classList.contains('tk-not')) return;
+  var k = e.target.closest('details').dataset.k; kayit(k).n = e.target.value;
+  yaz(TK_ANAHTAR, takip); takipCiz(k);
+});
+
+var tkSecim = bugunGun() ? 'bugun' : 'hepsi';
+function takipSuz(){
+  var g = String(bugunGun());
+  document.querySelectorAll('#tk-suzgec button').forEach(function(x){ x.classList.toggle('secili', x.dataset.s===tkSecim); });
+  document.querySelectorAll('#tk-liste details').forEach(function(d){
+    var s = tkSecim, dd = durumu(d.dataset.k), gs = d.dataset.g.split(',');
+    d.hidden = !(s==='hepsi' || (s==='eksik' && (dd==='yok' || dd==='eksik')) || (s==='A' && d.dataset.o==='A') ||
+      (s==='bugun' && gs.indexOf(g)>=0) || (s.charAt(0)==='g' && gs.indexOf(s.charAt(1))>=0));
+  });
+}
+(function(){ var bb = document.querySelector('#tk-suzgec [data-s=bugun]'); if(bugunGun()){ bb.hidden = false; bb.textContent = '📅 Bugün ('+bugunGun()+'. gün)'; } })();
+$('#tk-suzgec').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; tkSecim = b.dataset.s; takipSuz(); });
+
+function takipMetni(){
+  var n = new Date(), grup = {tamam:[], eksik:[], yok:[], dus:[]}, notlar = [], aT = 0, aH = 0;
+  CEKIMLER.forEach(function(c){
+    var r = takip[c.k] || {d:'yok', t:[], n:''};
+    var iy = r.t.map(function(x,i){ return x.y ? '⭐'+tAdi(i) : null; }).filter(Boolean);
+    grup[r.d].push(c.k + (c.o==='A' && r.d!=='tamam' ? ' 🔴' : '') + (r.t.length ? ' ('+r.t.length+' tekrar'+(iy.length ? ', '+iy.join(' ') : '')+')' : ''));
+    if(r.n && r.n.trim()) notlar.push('• ' + c.k + ': ' + r.n.replace(/\s+/g,' ').trim());
+    if(c.o==='A'){ aH++; if(r.d==='tamam') aT++; }
+  });
+  var m = ['🎬 Şam çekimi · takip · ' + n.toLocaleString('tr-TR', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}),
+           '✅ ' + grup.tamam.length + ' / ' + CEKIMLER.length + ' tamam · 🔴 olmazsa olmaz ' + aT + ' / ' + aH, ''];
+  if(grup.tamam.length) m.push('✅ Tamam: ' + grup.tamam.join(', '));
+  if(grup.eksik.length) m.push('🔁 Eksik: ' + grup.eksik.join(', '));
+  if(grup.yok.length)   m.push('⬜ Çekilmedi: ' + grup.yok.join(', '));
+  if(grup.dus.length)   m.push('⛔ Düştü: ' + grup.dus.join(', '));
+  if(notlar.length){ m.push('', '📝 Notlar:'); m = m.concat(notlar); }
+  return m.join('\n');
+}
+function tkMesaj(t){ var el = $('#tk-mesaj'); el.textContent = t; clearTimeout(el._z); el._z = setTimeout(function(){ el.textContent = ''; }, 4000); }
+function metniGoster(m){ var t = $('#tk-cikti'); t.hidden = false; t.value = m; t.focus(); t.select(); tkMesaj('Metni seçip kopyala, WhatsApp grubuna yapıştır.'); }
+$('#tk-paylas').addEventListener('click', function(){
+  var m = takipMetni();
+  if(navigator.share){
+    navigator.share({text: m}).catch(function(err){ if(!err || err.name !== 'AbortError') metniGoster(m); });
+  } else if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(m).then(function(){ tkMesaj('✅ Kopyalandı. WhatsApp grubuna yapıştır.'); }, function(){ metniGoster(m); });
+  } else metniGoster(m);
+});
+var tkIndir = null;
+try { if(window.claude && claude.use) claude.use('downloads').then(function(d){ tkIndir = d; }, function(){}); } catch(e){}
+$('#tk-csv').addEventListener('click', function(){
+  var sat = [['Kod','Çekim','Plan','Öncelik','Durum','Tekrar','Dosya adı','Tarih','Saat','İyi','Not']];
+  CEKIMLER.forEach(function(c){
+    var r = takip[c.k] || {d:'yok', t:[], n:''}, dur = DURUMLAR[r.d].replace(/^\S+\s/, ''), ad = c.ad.replace(/^⭐\s*/, '');
+    if(!r.t.length) sat.push([c.k, ad, c.p, c.o, dur, '', '', '', '', '', r.n || '']);
+    r.t.forEach(function(x,i){
+      sat.push([c.k, ad, c.p, c.o, dur, tAdi(i), c.k+'_'+tAdi(i)+'_'+x.t, x.t.slice(6)+'.'+x.t.slice(4,6)+'.'+x.t.slice(0,4), x.s, x.y ? 'evet' : '', i===0 ? (r.n || '') : '']);
+    });
+  });
+  var csv = '﻿' + sat.map(function(s){ return s.map(function(v){ v = String(v); return /[;"\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }).join(';'); }).join('\r\n');
+  var ad = 'Sam_Cekim_Takip_' + tarihKod(new Date()) + '.csv';
+  if(tkIndir){ // Claude sayfasında dosya, izinli indirme ile verilir
+    tkIndir.save({filename: ad, data: csv}).then(function(){ tkMesaj('📄 CSV kaydedildi (Excel ile açılır).'); },
+      function(err){ if(!err || err.code !== 'declined') metniGoster(csv.slice(1)); });
+    return;
+  }
+  if(window.claude){ metniGoster(csv.slice(1)); return; }
+  try {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    a.download = ad;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    tkMesaj('📄 CSV indirildi (Excel ile açılır).');
+  } catch(e){ metniGoster(csv.slice(1)); }
+});
+$('#tk-sifirla').addEventListener('click', function(){
+  ikiDokunus(this, '⚠️ Bütün kayıtlar silinsin mi? Yine dokun', function(){
+    takip = {}; yaz(TK_ANAHTAR, takip);
+    CEKIMLER.forEach(function(c){ takipCiz(c.k); }); takipOzet(); sayacGuncelle(); takipSuz();
+    tkMesaj('Takip sıfırlandı.');
+  });
+});
+CEKIMLER.forEach(function(c){ takipCiz(c.k); });
+takipOzet(); takipSuz();
 
 /* ---------- EKİPMAN ---------- */
 var CANTA_ANAHTAR = 'sam-ekip-canta-v6', ONAY_ANAHTAR = 'sam-ekip-onay-v6';
