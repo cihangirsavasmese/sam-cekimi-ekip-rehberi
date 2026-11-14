@@ -119,6 +119,10 @@ td,th{padding:6px 8px;border-top:1px solid var(--cizgi);text-align:left;vertical
 tr:first-child td,tr:first-child th{border-top:0}
 th{color:var(--baslik);white-space:nowrap}
 footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
+a.senaryo-pdf{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;border-left:6px solid var(--kirmizi)}
+a.senaryo-pdf:hover{background:var(--kart2)}
+a.senaryo-pdf .sim{font-size:28px;line-height:1;flex:none}
+a.senaryo-pdf .ok{margin-left:auto;color:var(--kirmizi-y);font-weight:700;font-size:20px;flex:none}
 @media (max-width:560px){h1{font-size:23px}dl{grid-template-columns:1fr}dt{margin-top:4px}.saat-satir{grid-template-columns:1fr;gap:0}.eslesme{grid-template-columns:1fr}.eslesme span{text-align:center}}
 @media print{.sekmeler,.suzgec{display:none}section.panel{display:block;padding-bottom:10px}body{background:#fff}details{break-inside:avoid}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
@@ -160,6 +164,12 @@ footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
     <p><b>30 saniyede film:</b> Türkiye'nin yurt dışında okulları var. Bu ağ, on beşinci ülke olarak Suriye'ye, Şam'a ulaştı. Film önce bu ağı, sonra Şam'ı, sonra yeni okulu tanıtıyor.</p>
     <p><b>Filmin numarası:</b> 1 dakika 56 saniye boyunca ekranda tek bir insan yok; okul bomboş. Sonra kapı açılıyor ve öğrenciler koşarak giriyor. Bütün duygu bu ana saklanmış. Bu yüzden çekimlerin çoğunda kadrajda kimse olmamalı.</p>
   </div>
+
+  <a class="kart senaryo-pdf" href="Sam_RTE_Turk_Okulu_Senaryo_v010.pdf" target="_blank" rel="noopener">
+    <span class="sim">📄</span>
+    <span><b>Senaryonun tamamı (PDF)</b><br><span class="alt-bilgi">v010 · 14 Kasım 2026 · 19 plan · 7 sayfa, yatay A4. Aç, indir ya da yazdır; sahada bir çıktısı yanımızda olsun.</span></span>
+    <span class="ok">↗</span>
+  </a>
 
   <div class="izgara">
     <div class="kart"><div class="sayi">15 <small>/ 19 plan</small></div>Bizim Şam'da çekeceğimiz planlar</div>
@@ -360,6 +370,7 @@ footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
     <label><input type="checkbox"><span>🏊 <b>Havuz:</b> açık mı kapalı mı, dolu mu?</span></label>
     <label><input type="checkbox"><span>✍️ <b>Y10 provası:</b> monopod hareketini gitmeden bir kez dene.</span></label>
     <label><input type="checkbox"><span>👥 <b>Görev dağılımı:</b> kim drone, kim yer kamerası, kim ses ve saha?</span></label>
+    <label><input type="checkbox"><span>🖨️ <b>Senaryo çıktısını al:</b> <a href="Sam_RTE_Turk_Okulu_Senaryo_v010.pdf" target="_blank" rel="noopener">senaryo v010 PDF</a>, yatay A4, 7 sayfa. Sahada bir kopyası yanımızda olsun.</span></label>
   </div>
 
   <div class="kart bilgi">🧳 Çanta listesi artık <b>Ekipman</b> sekmesinde: kimde ne var, ne alınacak, hangi lens hangi çekimde.</div>
@@ -390,7 +401,7 @@ footer{color:var(--soluk);font-size:13px;padding:0 0 30px}
   </div>
 </section>
 
-<footer>v006 · 13 Kasım 2026 · Dayanak: Senaryo v009 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
+<footer>v007 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
 </div>
 
 <script>
@@ -554,7 +565,7 @@ var ESYA = [
    ["Görev yazısı ve çekim izinleri","var",""],
    ["Boş muvafakatname formları","var","Okul toplayamadıysa sahada imzalatmak için."],
    ["Seri numaralı ekipman listesi × 2","var","Havalimanı ve sınır geçişi için."],
-   ["Basılı senaryo, çekim listesi ve takip çizelgesi","al","Çizelge sütunları: kod, tekrar, saat, not."]]}
+   ["Basılı senaryo, çekim listesi ve takip çizelgesi","al","Senaryo v010 PDF'i Film sekmesinin başında. Çizelge sütunları: kod, tekrar, saat, not."]]}
 ];
 var DURUM = {var:["Geliyor","d-var"], al:["🛒 Hazırlanacak","d-al"], bak:["🔎 Kontrol et","d-bak"]};
 
