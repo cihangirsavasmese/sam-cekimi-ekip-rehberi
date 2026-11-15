@@ -106,6 +106,11 @@ details.bitti>summary .bas{text-decoration:line-through;color:var(--soluk)}
 .liste label:last-child{border-bottom:0}
 .liste input{width:19px;height:19px;margin-top:2px;accent-color:var(--kirmizi);flex:none}
 .liste input:checked+span{color:var(--soluk);text-decoration:line-through}
+.sorular label{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:1px dashed var(--cizgi);cursor:pointer}
+.sorular input[type=checkbox]{width:19px;height:19px;margin-top:2px;accent-color:var(--kirmizi);flex:none}
+.sorular input:checked+span{color:var(--soluk);text-decoration:line-through}
+.sorular .hb-not{margin-top:10px}
+#hb-liste h2 .alt-bilgi{font-weight:400;white-space:nowrap}
 ul{margin:4px 0;padding-left:20px}
 li{margin:4px 0}
 .kural{display:flex;gap:12px;align-items:flex-start}
@@ -200,6 +205,7 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
   <button role="tab" data-sekme="cekimler">🎯 Çekimler</button>
   <button role="tab" data-sekme="takip">📋 Takip</button>
   <button role="tab" data-sekme="gunler">🗓️ 3 Gün</button>
+  <button role="tab" data-sekme="haber">📰 Haberimiz Olsun</button>
   <button role="tab" data-sekme="ekipman">🧳 Ekipman</button>
   <button role="tab" data-sekme="kurallar">📏 Kurallar</button>
   <button role="tab" data-sekme="hazirlik">🎒 Hazırlık</button>
@@ -360,6 +366,19 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
   </details>
 </section>
 
+<!-- ================= HABERİMİZ OLSUN ================= -->
+<section class="panel" id="haber">
+  <div class="kart bilgi">
+    <p><b>Haberimiz Olsun'un ricası:</b> okul ziyareti için röportaj soruları. Önce film çekimi gelir; <b>zaman kalırsa</b> bunları da sorarız. Sorulan sorunun kutusunu işaretle.</p>
+  </div>
+  <div class="kart">
+    <b id="hb-sayac">0 / 0 soru soruldu</b>
+    <div class="ilerleme"><div id="hb-cubuk"></div></div>
+    <span class="ipucu" id="hb-kayit-bilgi">İşaretler ve notlar yalnızca bu cihazda saklanır.</span>
+  </div>
+  <div id="hb-liste"></div>
+</section>
+
 <!-- ================= EKİPMAN ================= -->
 <section class="panel" id="ekipman">
   <div class="kart" id="esya-kart">
@@ -495,7 +514,7 @@ details.tk[data-d=dus] .bas{text-decoration:line-through}
   </div>
 </section>
 
-<footer>v010 · 14 Kasım 2026 · Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
+<footer>v011 · 15 Kasım 2026 ·Dayanak: Senaryo v010 ve Çekim Listesi v009. E kodlu çekimler ve gün planı öneridir.</footer>
 </div>
 
 <script>
@@ -704,7 +723,9 @@ function kur(liste){
   function isle(v){ if(v && typeof v === 'object') Object.keys(v).forEach(function(c){ var n = parseInt(v[c], 10); if(CIHAZ[c] && n > 0) sonNo[c] = Math.max(sonNo[c] || 0, n); }); }
   liste.forEach(function(e){
     var v = e.v;
-    if(e.o === 'sifirla'){ s = {}; return; }
+    if(e.o === 'sifirla'){ // takip sıfırlanır; Haberimiz Olsun işaretleri (H kodları) kalır
+      var kalan = {}; Object.keys(s).forEach(function(k){ if(k.charAt(0) === 'H') kalan[k] = s[k]; }); s = kalan; return;
+    }
     if(e.o === 'sayac'){ if(v && CIHAZ[v.c]) sonNo[v.c] = Math.max(0, (parseInt(v.no, 10) || 1) - 1); return; }
     var r = s[e.k] || (s[e.k] = {d:'yok', t:[], n:'', cz:null});
     if(e.o === 'tekrar'){ r.t.push({id:e.i, s:(v && v.s) || '', t:(v && v.t) || '', c:e.c || '', f:Object.assign({}, v && v.f)}); isle(v && v.f); if(r.d === 'yok') r.d = 'eksik'; }
@@ -731,7 +752,7 @@ function olay(k, o, v, aciklama){
 function yenile(){
   takip = kur(olaylar.concat(kuyruk));
   if(!takipHazir) return;
-  CEKIMLER.forEach(function(c){ takipCiz(c.k); }); takipOzet(); sayacGuncelle(); esitDurum();
+  CEKIMLER.forEach(function(c){ takipCiz(c.k); }); takipOzet(); sayacGuncelle(); haberCiz(); esitDurum();
 }
 
 /* Drive ile eşitleme */
@@ -1214,6 +1235,81 @@ $('#gun-liste').innerHTML = GUNLER.map(function(g,i){
 $('#kural-liste').innerHTML = KURALLAR.map(function(k){
   return '<details><summary><span class="kural"><span class="sim">'+k[0]+'</span><span class="bas">'+k[1]+'</span></span></summary><div class="govde">'+k[2]+'</div></details>';
 }).join('');
+
+/* ---------- HABERİMİZ OLSUN (haber kanalının röportaj soruları) ----------
+   Sorular H01, H02… ve grup notları H91–H94 koduyla Takip ile aynı olay kaydına yazılır;
+   böylece ortak kayıtta herkes aynı işaretleri görür. Soru sırası değişirse kodlar kayar. */
+var HABER = [
+  {ad:'Okul tanıtımı ve genel bilgi', kime:'Okul müdürü ve müdür yardımcılarına yöneltilebilir.', s:[
+    "Okulun kuruluş hikâyesini anlatır mısınız? Ne zaman, hangi ihtiyaçla açıldı?",
+    "Okulda kaç öğrenci ve kaç öğretmen bulunuyor? Hangi kademelerde eğitim veriliyor?",
+    "Öğrencilerin kültürel ve ailevi profili nasıl? Hangi toplulukların çocukları okula geliyor?",
+    "Hangi müfredat uygulanıyor? Türkçe, Arapça ve yabancı dil derslerinin yeri nedir?",
+    "Okul, Şam’daki Türk toplumu ve yerel halk için ne ifade ediyor?",
+    "Bu okul Şam’daki Türk ve yerel topluluk için nasıl bir anlam taşıyor?",
+    "Velilerin okula katılımı ve okulla iletişimi nasıl?"]},
+  {ad:'Öğretmenlere yönelik sorular', kime:'', s:[
+    "Şam’daki Türk Okulu’nda görev yapmak sizin için nasıl bir deneyim?",
+    "Öğrencilerinizin Türkçe düzeyi nasıl? Dil konusunda hangi zorluklarla karşılaşıyorsunuz?",
+    "Öğrencilerin motivasyonunu ve okula bağlılığını nasıl sağlıyorsunuz?",
+    "Velilerle iletişiminiz nasıl? Aileler eğitime ne kadar destek veriyor?",
+    "Farklı kültür ve geçmişten gelen öğrencilerin kaynaşmasını nasıl sağlıyorsunuz?"]},
+  {ad:'Öğrencilere yönelik sorular', kime:'Çocukların yaş aralığı dikkate alınarak sorulmalı. ⚠️ Yalnızca velisinden yazılı izin alınmış öğrencilerle.', s:[
+    "Adın ne, kaç yaşındasın, kaçıncı sınıftasın?",
+    "Okulda seni en çok ne mutlu ediyor?",
+    "Okulda en çok sevdiğin yer veya etkinlik ne?",
+    "Teneffüslerde arkadaşlarınla neler oynuyorsunuz? (maarifin kalbinde oyuna atıfta bulunulabilir)",
+    "Sabah okula gelirken neler hissediyorsun?",
+    "Türkiye’deki bir okulla çevrim içi buluşma imkânı olsa, o öğrencilere ne sormak veya göstermek isterdin?",
+    "Bu okulun ilk öğrencileri arasında olmak sence nasıl bir duygu?"]},
+  {ad:'Velilere yönelik sorular', kime:'İmkân olursa kısa bir veli görüşmesi için.', s:[
+    "Çocuğunuzu neden bu okula gönderdiniz? Bu okulu tercih etmenizde en etkili olan şey neydi?",
+    "Okulun açılışından bu yana çocuğunuzda gözlemlediğiniz bir değişim var mı?"]}
+];
+var hbNotZaman = {};
+(function(){
+  var n = 0;
+  $('#hb-liste').innerHTML = HABER.map(function(g, i){
+    return '<h2>' + (i+1) + '. ' + g.ad + ' <span class="alt-bilgi" id="hb-g'+i+'"></span></h2>' +
+      (g.kime ? '<p class="ipucu">' + g.kime + '</p>' : '') +
+      '<div class="kart sorular" data-g="'+i+'">' +
+      g.s.map(function(m){ n++; return '<label><input type="checkbox" data-k="H'+iki(n)+'"><span>'+m+'</span></label>'; }).join('') +
+      '<textarea class="tk-not hb-not" data-k="H9'+(i+1)+'" rows="2" aria-label="'+g.ad+' notu" placeholder="Not: kim cevapladı (görevi), hangi kamera, dosya numarası…"></textarea></div>';
+  }).join('');
+  if(ORTAK) $('#hb-kayit-bilgi').innerHTML = 'İşaretler ve notlar <b>Drive\'daki ortak kayda</b> gider; ekipteki herkes aynı listeyi görür. Nota öğrenci adı ya da kişisel bilgi yazma.';
+})();
+function haberCiz(){
+  var top = 0, tam = 0;
+  document.querySelectorAll('#hb-liste .sorular').forEach(function(kart){
+    var g = 0, kutular = kart.querySelectorAll('input[type=checkbox]');
+    kutular.forEach(function(x){ var v = durumu(x.dataset.k) === 'tamam'; x.checked = v; if(v) g++; });
+    top += kutular.length; tam += g;
+    $('#hb-g' + kart.dataset.g).textContent = '· ' + g + ' / ' + kutular.length;
+    var not = kart.querySelector('.hb-not'), k = not.dataset.k, r = takip[k];
+    if(document.activeElement !== not && !hbNotZaman[k]) not.value = (r && r.n) || '';
+  });
+  $('#hb-sayac').textContent = tam + ' / ' + top + ' soru soruldu';
+  $('#hb-cubuk').style.width = (top ? 100*tam/top : 0) + '%';
+}
+function hbNotKaydet(k, deger){
+  clearTimeout(hbNotZaman[k]); delete hbNotZaman[k];
+  var r = takip[k]; if((r ? r.n : '') === deger) return;
+  olay(k, 'not', deger, 'Haber notu ' + k + ': ' + deger.replace(/\s+/g, ' ').slice(0, 200));
+}
+$('#hb-liste').addEventListener('change', function(e){
+  var x = e.target; if(x.type !== 'checkbox') return;
+  var k = x.dataset.k, soru = x.nextElementSibling.textContent.slice(0, 200);
+  olay(k, 'durum', x.checked ? 'tamam' : 'yok', 'Haber ' + k + (x.checked ? ' soruldu: ' : ' geri alındı: ') + soru);
+});
+$('#hb-liste').addEventListener('input', function(e){
+  if(!e.target.classList.contains('hb-not')) return;
+  var k = e.target.dataset.k, deger = e.target.value;
+  clearTimeout(hbNotZaman[k]); hbNotZaman[k] = setTimeout(function(){ hbNotKaydet(k, deger); }, 1500);
+});
+$('#hb-liste').addEventListener('focusout', function(e){
+  if(e.target.classList.contains('hb-not')) hbNotKaydet(e.target.dataset.k, e.target.value);
+});
+haberCiz();
 
 /* ---------- SEKMELER ---------- */
 function sekmeAc(ad){
